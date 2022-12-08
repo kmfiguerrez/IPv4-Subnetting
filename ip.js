@@ -169,9 +169,9 @@ class Subnet {
          */
 
         try {
-            if(decimal === undefined) throw "Did not pass in an argument!";
-            if(decimal === "") throw "Argument cannot be empty!";
-            if(typeof numOfDigits !== "number") throw "Second argument must be of type number!";
+            if(decimal === undefined) throw new Error("Did not pass in an argument!");
+            if(decimal === "") throw new Error("Argument cannot be empty!");
+            if(typeof numOfDigits !== "number") throw new Error("Second argument must be of type number!");
 
 
             // If decimal input is a string then parse it into decimal.
@@ -207,10 +207,10 @@ class Subnet {
          */
 
         try {
-            if(ipv4 === undefined) throw "Did not pass in an argument!";
-            if(ipv4 === "") throw "Argument cannot be empty!";
-            if(typeof ipv4 !== "string") throw "Argument must be a string!";
-            if(!ipv4.includes(".")) throw "IPv4 must written in a dot notation!";
+            if(ipv4 === undefined) throw new Error("Did not pass in an argument!");
+            if(ipv4 === "") throw new Error("Argument cannot be empty!");
+            if(typeof ipv4 !== "string") throw new Error("Argument must be a string!");
+            if(!ipv4.includes(".")) throw new Error("IPv4 must written in a dot notation!");
 
             const ipv4InArray = ipv4.split(".");
             let ipv4AsBin = [];
@@ -240,9 +240,9 @@ class Subnet {
          */
 
         try {
-            if(ipv4 === undefined) throw "Did not pass in an argument!";
-            if(ipv4 === "") throw "Argument cannot be empty!";
-            if(typeof ipv4 !== "string") throw "Argument must be a string!";
+            if(ipv4 === undefined) throw new Error("Did not pass in an argument!");
+            if(ipv4 === "") throw new Error("Argument cannot be empty!");
+            if(typeof ipv4 !== "string") throw new Error("Argument must be a string!");
             
 
             let ipv4InArray = []
@@ -251,7 +251,7 @@ class Subnet {
             // If the input is not written in a dot notation.
             if (!ipv4.includes(".")) {
                 // Make sure that the input is a complete 32 bits.
-                if(ipv4.length !== 32) throw "Input must written in a complete 32 bits!";
+                if(ipv4.length !== 32) throw new Error("Input must written in a complete 32 bits!");
 
                 // Get each set of 8 bits.                
                 for (let index = 0; index < 32; index+=8) {
@@ -285,10 +285,10 @@ class Subnet {
          */
 
         try {
-            if(subnetMask === undefined) throw "Did not pass in an argument!";
-            if(subnetMask === "") throw "Argument cannot be empty!";
-            if(typeof subnetMask !== "string") throw "Argument must be a string!";
-            if(this.checkSM(subnetMask)  === false) throw "Invalid Subnet Mask!";
+            if(subnetMask === undefined) throw new Error("Did not pass in an argument!");
+            if(subnetMask === "") throw new Error("Argument cannot be empty!");
+            if(typeof subnetMask !== "string") throw new Error("Argument must be a string!");
+            if(this.checkSM(subnetMask)  === false) throw new Error("Invalid Subnet Mask!");
             
             let cidr = 0;
             // Convert the Subnet Mask to a string of continuous binaries.
@@ -317,10 +317,10 @@ class Subnet {
          */
 
         try {
-            if(cidr === undefined) throw "Did not pass in an argument!";
-            if(cidr === "") throw "Argument cannot be empty!";
-            if(typeof cidr !== "number") throw "Argument must be a number!";
-            if(cidr < 0 || cidr > 32) throw "CIDR is out of range!";
+            if(cidr === undefined) throw new Error("Did not pass in an argument!");
+            if(cidr === "") throw new Error("Argument cannot be empty!");
+            if(typeof cidr !== "number") throw new Error("Argument must be a number!");
+            if(cidr < 0 || cidr > 32) throw new Error("CIDR is out of range!");
 
             let subnetMask = "";
             
@@ -354,12 +354,12 @@ class Subnet {
 
         try {
             
-            if(ipv4Input === undefined || smInput === undefined || subnetBitsInput === undefined) throw "Arguments cannot be undefined!";
-            if(ipv4Input === "" || smInput === "") throw "Arguments cannot be empty!";
-            if(typeof ipv4Input !== "string" || typeof smInput !== "string") throw "Arguments must be a string!";
-            if(typeof subnetBitsInput !== "number") throw "Third argument must a number!";
-            if(Subnet.checkFormat(ipv4Input) === false) throw "Invalid IPv4 Address!";
-            if(Subnet.checkSM(smInput) === false) throw "Invalid Subnet Mask!";
+            if(ipv4Input === undefined || smInput === undefined || subnetBitsInput === undefined) throw new Error("Arguments cannot be undefined!");
+            if(ipv4Input === "" || smInput === "") throw new Error("Arguments cannot be empty!");
+            if(typeof ipv4Input !== "string" || typeof smInput !== "string") throw new Error("Arguments must be a string!");
+            if(typeof subnetBitsInput !== "number") throw new Error("Third argument must a number!");
+            if(Subnet.checkFormat(ipv4Input) === false) throw new Error("Invalid IPv4 Address!");
+            if(Subnet.checkSM(smInput) === false) throw new Error("Invalid Subnet Mask!");
             // Check first the ipv4 and subnet mask inputs.
             
             const ipv4 = ipv4Input;
@@ -374,8 +374,8 @@ class Subnet {
             const networkPortion = ipv4Bin.split(".").join("").slice(0, networkPortionBits);
             const subnetsList = [];
 
-            if (CIDR === 0 || CIDR === 32) throw "Invalid Subnet Mask or CIDR!";
-            if (newSubnetMask > 30) throw "Invalid subnet bits entry!";
+            if (CIDR === 0 || CIDR === 32) throw new Error("Invalid Subnet Mask or CIDR!");
+            if (newSubnetMask > 30) throw new Error("Invalid subnet bits entry!");
                 
 
             // Declare and initialize new Subnet object.
@@ -447,40 +447,6 @@ class Subnet {
         }
     }
 
-    static findSubnet(inputSubnetNumber, subnets) {
-        /**
-         * This method takes two parameters of type number and an array.         
-         * This method finds the subnet based on the subnet number input.
-         * Returns an object.
-         */
-
-        try {
-            if (inputSubnetNumber === undefined || subnets === undefined) throw "Arguments cannot be undefined!";
-            if (inputSubnetNumber === "" || subnets === "") throw "Arguments cannot be empty!";
-            if (typeof inputSubnetNumber !== "number") throw "First argument must a number!";
-            if (Array.isArray(subnets) === false) throw "Second argument must an array!";
-            
-            
-            // If subnets var has only one subnet just return it.
-            if (subnets.length === 1) {
-                return subnets[0];
-            }
-
-            // Check if the input subnet number is in range. 
-            if (inputSubnetNumber < 0 || inputSubnetNumber > (subnets.length - 1)) {
-                throw "Subnet number is out range!";
-            } 
-
-            for (const subnet of subnets) {
-                if (subnet.subnetNumber === inputSubnetNumber) {
-                    return subnet;
-                }
-            }
-            
-        } catch (error) {
-            console.log(error)
-        }
-    }
 }
 
 export { Subnet };
