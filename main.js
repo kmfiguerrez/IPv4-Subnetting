@@ -16,14 +16,18 @@ const bac = document.getElementById("broadcast-address");
 const caption = document.getElementById("caption");
 const subnetNumberInput = document.getElementById("subnet-number");
 
+// Create Popover.
+const popover = new bootstrap.Popover(subnetNumberInput, {        
+    placement: "top",
+    title: "Did you know?",
+    content: "You can change the value to find subnets.",
+    trigger: "manual",    
+})
 
-// Poppers
-// const exampleEl = document.querySelector("#subnet-number");
-// const popover = new bootstrap.Popover(exampleEl, {        
-//         placement: "top",
-//         title: "Did you know?",
-//         content: "You can change the value?"        
-// })
+// Popover should only be shown once.
+let popMessage = false;
+// Subnet bits warning message shows up once.
+let subnetBitsMessage = false;
 
 
 // Model
@@ -87,7 +91,7 @@ const checkUserInputs = () => {
     if( !Subnet.checkFormat(ipv4) ) return new Error("Invalid IPv4!");
 
     // Second check the subnet mask.
-    if( !Subnet.checkSM(subnetMask) ) return new Error("Invalid Subnet Mask!");
+    if( !Subnet.checkSM(subnetMask) || CIDR === 0 || CIDR === 32 ) return new Error("Invalid Subnet Mask!");
 
     // Third check the subnet bits entry.
     if( (CIDR + subnetBits) > 30 ) return new Error("Invalid subnet bits entry!");
@@ -101,25 +105,24 @@ const checkUserInputs = () => {
 }
 
 // View.
-const renderError = (error) => {
+const renderError = (error, preText="Error", alertType="danger") => {
     /**
      * This method displays error to the user using bootstrap alert component.
-     * This method takes an error object.
+     * This method takes an error object and two optional arguments.
      * Returns null.
      */
 
-    const outputHeaderElem = document.getElementById("output-header");
+    const outputSection = document.getElementById("output-section");
     
     // Create alert element
     const alert = document.createElement("div");
     // Add attributes to alert.
-    alert.setAttribute("class", "alert alert-danger alert-dismissible fade show");
+    alert.setAttribute("class", `alert alert-${alertType} alert-dismissible fade show`);
     alert.setAttribute("role", "alert");
     alert.style.fontSize = "1rem"
 
     // Create a message for alert element.
-    const text = document.createTextNode("Error");
-    alert.innerHTML = `<strong>Error</strong>: ${error.message}`;
+    alert.innerHTML = `<strong>${preText}</strong>! ${error.message}`;
 
     // Create a close button element for alert element.
     const button = document.createElement("button");
@@ -131,7 +134,7 @@ const renderError = (error) => {
 
     alert.appendChild(button);
     
-    outputHeaderElem.insertAdjacentElement("beforeend", alert);
+    outputSection.insertAdjacentElement("afterbegin", alert);
 }
 
 
@@ -154,9 +157,13 @@ const render = function() {
     fuac.innerHTML = firstUsableAddress;
     luac.innerHTML = lastUsableAddress;
     bac.innerHTML = broadcastAddress;
+
+    // Popover will pop up once.
+    if ( !popMessage ) {
+        popover.show();
+        popMessage = true;    
+    }        
 }
-
-
 
 // Controller.
 const getSubnet = function() {
@@ -165,8 +172,11 @@ const getSubnet = function() {
     const subnetMask = smInput.value;
     const subnetBits = parseInt(subnetBitsInput.value);
     const SubnetsList = Subnet.getSubnets(ipv4, subnetMask, subnetBits);
+
+    // Make sure first that the subnet number always starts with 0.
+    subnetNumberInput.value = 0;
     
-    // Check user inputs first.
+    // Check user inputs.
     const result = checkUserInputs()     
     if (result !== true) {
         // Display error to the user.
@@ -182,6 +192,8 @@ const getSubnet = function() {
     
     // Display the subnet.
     render();
+
+
 }
 
 
@@ -192,18 +204,25 @@ const findSubnet = function() {
      */
 
     const subnetNumber = parseInt(subnetNumberInput.value);
+    let maxAttrbValue = subnets.length - 1;
 
-     // Check user inputs first.
-     const result = checkUserInputs()     
-     if (result !== true) {
-         // Display error to the user.
-         renderError(result);
-         return;
-     } 
+    // Check user inputs first.
+    const result = checkUserInputs()     
+    if (result !== true) {
+        // Display error to the user.
+        renderError(result);
+        return;
+    } 
 
     // Set the max attribute for users convenience.
-    subnetNumberInput.setAttribute("max", `${subnets.length}`);
-
+    if (maxAttrbValue === 0) {
+        console.log(maxAttrbValue);
+        maxAttrbValue = 1; 
+        console.log(maxAttrbValue);
+    }
+    
+    subnetNumberInput.setAttribute("max", `${maxAttrbValue}`);
+    
     // Set the current number based on user's input to be displayed by the render function.
     currentSubnet = subnets[subnetNumber];
 
@@ -219,17 +238,42 @@ submitButton.addEventListener("click", () => {
     const form = document.querySelector('.needs-validation');
    
     form.addEventListener('submit', function (event) {
-        event.preventDefault()
+        event.preventDefault();
         if (!form.checkValidity()) {            
-            event.stopPropagation()
+            event.stopPropagation();
         }
 
         form.classList.add('was-validated')
-    }, false)
+    })
 
 
 });
 
 submitButton.addEventListener("click", getSubnet);
+
+subnetNumberInput.addEventListener("focus", () => {
+    console.log("Popover hide")
+    popover.hide()
+});
+
+// Give user some warning message for subnet bits.
+subnetBitsInput.addEventListener("focus", () => {
+    
+    // Subnet bits message pops up once.
+    if ( !subnetBitsMessage ) {
+
+        const warning = new Error(`
+        The higher the subnet bits means the higher the number
+        of subnets Javascript has to calculate so that means 
+        the longer time it will take to get the results.
+        
+        To be honest the app might crashed on low end device.
+        `)
+
+        renderError(warning, "Beware");
+
+        subnetBitsMessage = true;
+    }    
+});
 
 subnetNumberInput.addEventListener("change", findSubnet);

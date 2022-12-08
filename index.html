@@ -11,48 +11,45 @@
 <body>
     <div class="container" style="font-family: 'Alexandria', sans-serif;">
         
-        <h1 class="text-center">IPV4 SUBNETTING</h1>
+        <h1 class="text-center my-4">IPV4 SUBNETTING</h1>
         <!-- Form Section -->
         <section id="form-section">
-            <form class="needs-validation" novalidate>
+            <form class="needs-validation mb-5" novalidate>
                 <div class="mb-3">
                     <label for="ipv4" class="form-label">IPv4</label>
                     <input type="text" class="form-control" id="ipv4" placeholder="Given IP Address" required>
                     <div class="invalid-feedback">
-                        IPv4 cannot be empty!
+                        Invalid IPv4 entry!
                     </div>            
                 </div>
                 <div class="mb-3">
                     <label for="subnet-mask" class="form-label">Subnet Mask</label>
                     <input type="text" class="form-control" id="subnet-mask" placeholder="Given Subnet Mask" required>
                     <div class="invalid-feedback">
-                        Subnet Mask cannot be empty!
+                        Invalid Subnet Mask entry!
                     </div> 
                 </div>
                 <div class="mb-3">
                     <label for="subnet-bits" class="form-label">Subnet Bits</label>
                     <input type="number" class="form-control" id="subnet-bits" placeholder="(borrowed bits)" min="0" max="29" required>
                     <div class="invalid-feedback">
-                        Subnet bits cannot be empty nor negative!
+                        Invalid Subnet bits entry!
                     </div> 
                 </div>          
                 <button id="submit" class="btn btn-primary">Submit</button>
             </form>
         </section>
+
         <!-- Output Section -->
         <section id="output-section">
-            <h2 id="output-header" class="text-center">OUTPUT</h2>
-            <!-- <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div> -->
+            <h2 id="output-header" class="text-center visually-hidden">OUTPUT</h2>
             <!-- Table -->
-            <table class="table table-striped table-hover caption-top">
+            <table class="table table-hover caption-top">
                 <caption id="caption">Subnet Ouput</caption>
-                <thead>
+                <thead class="table-light">
                     <tr>
-                        <th scope="col">Subnet#</th>
-                        <th scope="col"><input id="subnet-number" type="number" class="border-0" min="0" value="0"/></th>
+                        <th scope="col" class="w-50">Subnet#</th>
+                        <th scope="col" class="w-50"><input id="subnet-number" type="number" class="border-0 bg-transparent mx-0 w-50" min="0" value="0"/></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -84,8 +81,6 @@
     
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <!-- <script src="main.js" type="module"></script> -->
-    <!-- <script src="ip.js"></script> -->
     <script src="main.js" type="module"></script>
 
 </body>

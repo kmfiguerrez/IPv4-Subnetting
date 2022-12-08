@@ -353,14 +353,14 @@ class Subnet {
          */
 
         try {
-            
+            // Check first the ipv4 and subnet mask inputs.
             if(ipv4Input === undefined || smInput === undefined || subnetBitsInput === undefined) throw new Error("Arguments cannot be undefined!");
             if(ipv4Input === "" || smInput === "") throw new Error("Arguments cannot be empty!");
             if(typeof ipv4Input !== "string" || typeof smInput !== "string") throw new Error("Arguments must be a string!");
             if(typeof subnetBitsInput !== "number") throw new Error("Third argument must a number!");
             if(Subnet.checkFormat(ipv4Input) === false) throw new Error("Invalid IPv4 Address!");
             if(Subnet.checkSM(smInput) === false) throw new Error("Invalid Subnet Mask!");
-            // Check first the ipv4 and subnet mask inputs.
+            
             
             const ipv4 = ipv4Input;
             const ipv4Bin = Subnet.bin(ipv4);
