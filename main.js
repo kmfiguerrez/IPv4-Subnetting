@@ -26,34 +26,10 @@ const popover = new bootstrap.Popover(subnetNumberInput, {
 
 // Popover should only be shown once.
 let popMessage = false;
-// Subnet bits warning message shows up once.
-let subnetBitsMessage = false;
-
 
 // Model
-// List of subnets.
-let subnets = [];
 // Current subnet to be displayed.
 let currentSubnet = {};
-
-// Set list of subnet(s).
-const setSubnets = function(inputSubnets) {
-    /**
-     * This method takes a parameter of type array.
-     * This method will set the values of the subnets variable
-     * in the model section.
-     */
-
-    try {
-        if(inputSubnets === undefined || inputSubnets === "") throw new Error("Argument cannot be undefined nor empty!");
-        if(Array.isArray(inputSubnets) === false) throw new Error("Argument must be an array!.");
-
-        subnets = inputSubnets;
-
-    } catch (error) {
-        console.log(error);
-    }
-}
 
 // Set the current subnet variable.
 const setCurrentSubnet = function(inputCurrentSubnet) {
@@ -98,7 +74,7 @@ const checkUserInputs = () => {
 
     // Fourth check the subnet number input.
     // Make sure that there's alreay subnets added to subnets variable.
-    if( subnets.length !== 0 && subnetNumber < 0 || subnetNumber > (numberOfNetworks - 1) ) return new Error(`Subnet ${subnetNumber} does not exists!`);
+    if( subnetNumber < 0 || subnetNumber > (numberOfNetworks - 1) ) return new Error(`Subnet ${subnetNumber} does not exists!`);
 
     // Otherwise valid.
     return true;
@@ -166,15 +142,12 @@ const render = function() {
 }
 
 // Controller.
-const getSubnet = function() {
+const getSubnet = function(subnetNumber) {
         
     const ipv4 = ipv4Input.value;
     const subnetMask = smInput.value;
     const subnetBits = parseInt(subnetBitsInput.value);
-    const SubnetsList = Subnet.getSubnets(ipv4, subnetMask, subnetBits);
-
-    // Make sure first that the subnet number always starts with 0.
-    subnetNumberInput.value = 0;
+    const subnet = Subnet.getSubnets(ipv4, subnetMask, subnetBits, subnetNumber);    
     
     // Check user inputs.
     const result = checkUserInputs()     
@@ -184,52 +157,12 @@ const getSubnet = function() {
         return;
     } 
     
-    // Set the subnet list
-    setSubnets(SubnetsList);
-    
-    // Set the default current subnet to be displayed which is subnet zero.        
-    setCurrentSubnet(SubnetsList[0]);
+    // Set the current subnet which to be display by the render function.        
+    setCurrentSubnet(subnet);
     
     // Display the subnet.
     render();
-
-
 }
-
-
-const findSubnet = function() {
-    /**
-     * This method finds the subnet based on user's input.
-     * Returns null.
-     */
-
-    const subnetNumber = parseInt(subnetNumberInput.value);
-    let maxAttrbValue = subnets.length - 1;
-
-    // Check user inputs first.
-    const result = checkUserInputs()     
-    if (result !== true) {
-        // Display error to the user.
-        renderError(result);
-        return;
-    } 
-
-    // Set the max attribute for users convenience.
-    if (maxAttrbValue === 0) {
-        console.log(maxAttrbValue);
-        maxAttrbValue = 1; 
-        console.log(maxAttrbValue);
-    }
-    
-    subnetNumberInput.setAttribute("max", `${maxAttrbValue}`);
-    
-    // Set the current number based on user's input to be displayed by the render function.
-    currentSubnet = subnets[subnetNumber];
-
-    // Display the current subnet
-    render();    
-}
-
 
 
 // Event listeners.
@@ -249,31 +182,24 @@ submitButton.addEventListener("click", () => {
 
 });
 
-submitButton.addEventListener("click", getSubnet);
+submitButton.addEventListener("click", () => {
+    
+    // Make sure first that the subnet number always starts with 0.
+    subnetNumberInput.value = 0;
+    
+    // Render subnet 0.
+    getSubnet(0)
+});
 
 subnetNumberInput.addEventListener("focus", () => {
     console.log("Popover hide")
     popover.hide()
 });
 
-// Give user some warning message for subnet bits.
-subnetBitsInput.addEventListener("focus", () => {
-    
-    // Subnet bits message pops up once.
-    if ( !subnetBitsMessage ) {
+subnetNumberInput.addEventListener("change", () => {
 
-        const warning = new Error(`
-        The higher the subnet bits means the higher the number
-        of subnets Javascript has to calculate so that means 
-        the longer time it will take to get the results.
-        
-        To be honest the app might crashed on low end device.
-        `)
+    const subnetToFind = parseInt(subnetNumberInput.value);
+    console.log(subnetToFind)
+    getSubnet(subnetToFind);
 
-        renderError(warning, "Beware");
-
-        subnetBitsMessage = true;
-    }    
 });
-
-subnetNumberInput.addEventListener("change", findSubnet);

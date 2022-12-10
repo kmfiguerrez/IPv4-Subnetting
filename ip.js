@@ -345,7 +345,7 @@ class Subnet {
         }
     }
 
-    static getSubnets(ipv4Input, smInput, subnetBitsInput) {
+    static getSubnets(ipv4Input, smInput, subnetBitsInput, subnetToFInd) {
         /**
          * This method takes a parameters of type string.
          * This method lists the subnet object(s). 
@@ -372,7 +372,8 @@ class Subnet {
             const hostPortionBits = 32 - (CIDR + subnetBitsInput);
             const networkPortionBits = 32 - (subnetBits + hostPortionBits);
             const networkPortion = ipv4Bin.split(".").join("").slice(0, networkPortionBits);
-            const subnetsList = [];
+            // const subnetsList = [];
+            let subnet = {};
 
             if (CIDR === 0 || CIDR === 32) throw new Error("Invalid Subnet Mask or CIDR!");
             if (newSubnetMask > 30) throw new Error("Invalid subnet bits entry!");
@@ -436,11 +437,15 @@ class Subnet {
                 // Set the subnet's broadcast address.
                 newSubnet.broadcastAddress = Subnet.dec(newSubnet.networkPortion + newSubnet.subnetPortion + newSubnet.hostPortion.bap);
 
-                subnetsList.push(newSubnet);                
+                // subnetsList.push(newSubnet);
+                if (index === subnetToFInd) {
+                    subnet = newSubnet;
+                    return subnet;
+                }
             }
             
             // Returns an array of object(s).
-            return subnetsList;
+            // return subnetsList;
 
         } catch (error) {
             console.log(error);
