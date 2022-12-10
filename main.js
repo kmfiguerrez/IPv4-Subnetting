@@ -15,12 +15,13 @@ const luac = document.getElementById("last-usable-address");
 const bac = document.getElementById("broadcast-address");
 const caption = document.getElementById("caption");
 const subnetNumberInput = document.getElementById("subnet-number");
+const hostPerSubnet = document.getElementById("host");
 
 // Create Popover.
 const popover = new bootstrap.Popover(subnetNumberInput, {        
     placement: "top",
     title: "Did you know?",
-    content: "You can change the value to find subnets.",
+    content: "You can change this value to find other subnets if available.",
     trigger: "manual",    
 })
 
@@ -72,8 +73,7 @@ const checkUserInputs = () => {
     // Third check the subnet bits entry.
     if( (CIDR + subnetBits) > 30 ) return new Error("Invalid subnet bits entry!");
 
-    // Fourth check the subnet number input.
-    // Make sure that there's alreay subnets added to subnets variable.
+    // Fourth check the subnet number input.    
     if( subnetNumber < 0 || subnetNumber > (numberOfNetworks - 1) ) return new Error(`Subnet ${subnetNumber} does not exists!`);
 
     // Otherwise valid.
@@ -127,12 +127,23 @@ const render = function() {
     const lastUsableAddress = subnet.lastUsableAddress;
     const broadcastAddress = subnet.broadcastAddress;
     const numOfSubnets = 2 ** subnet.subnetPortion.length;
-
+    const hostPerSubnetValue = (2 ** subnet.hostPortion.length) - 2;
+    const naCIDR = nac.nextElementSibling;
+    const fuacCIDR = fuac.nextElementSibling;
+    const luacCIDR = luac.nextElementSibling;
+    const baCIDR = bac.nextElementSibling;
+    
+    // Display.
     caption.innerHTML = `There are ${numOfSubnets} subnet(s)`;
     nac.innerHTML = networkAddress;
     fuac.innerHTML = firstUsableAddress;
     luac.innerHTML = lastUsableAddress;
     bac.innerHTML = broadcastAddress;
+    hostPerSubnet.innerHTML = hostPerSubnetValue;
+    naCIDR.innerHTML = `/${subnet.CIDR}`;
+    fuacCIDR.innerHTML = `/${subnet.CIDR}`;
+    luacCIDR.innerHTML = `/${subnet.CIDR}`;
+    baCIDR.innerHTML = `/${subnet.CIDR}`;
 
     // Popover will pop up once.
     if ( !popMessage ) {
@@ -186,6 +197,9 @@ submitButton.addEventListener("click", () => {
     
     // Make sure first that the subnet number always starts with 0.
     subnetNumberInput.value = 0;
+
+    // reset host value.
+    hostPerSubnet.innerHTML = 0;
     
     // Render subnet 0.
     getSubnet(0)
@@ -199,7 +213,7 @@ subnetNumberInput.addEventListener("focus", () => {
 subnetNumberInput.addEventListener("change", () => {
 
     const subnetToFind = parseInt(subnetNumberInput.value);
-    console.log(subnetToFind)
+
     getSubnet(subnetToFind);
 
 });

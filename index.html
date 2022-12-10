@@ -10,33 +10,50 @@
 </head>
 <body>
     <div class="container" style="font-family: 'Alexandria', sans-serif;">
+        <!-- Nav section -->
+        <nav class="navbar navbar-expand-sm navbar-light bg-transparent mb-5">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">IPV4 SUBNETTING</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav ms-auto">
+                        <a class="nav-link" href="#">Features</a>                        
+                    </div>
+                </div>
+            </div>
+        </nav>
         
-        <h1 class="text-center my-4">IPV4 SUBNETTING</h1>
         <!-- Form Section -->
         <section id="form-section">
             <form class="needs-validation mb-5" novalidate>
-                <div class="mb-3">
-                    <label for="ipv4" class="form-label">IPv4</label>
-                    <input type="text" class="form-control" id="ipv4" placeholder="Given IP Address" required>
-                    <div class="invalid-feedback">
-                        Invalid IPv4 entry!
-                    </div>            
-                </div>
-                <div class="mb-3">
-                    <label for="subnet-mask" class="form-label">Subnet Mask</label>
-                    <input type="text" class="form-control" id="subnet-mask" placeholder="Given Subnet Mask" required>
-                    <div class="invalid-feedback">
-                        Invalid Subnet Mask entry!
-                    </div> 
-                </div>
-                <div class="mb-3">
-                    <label for="subnet-bits" class="form-label">Subnet Bits</label>
-                    <input type="number" class="form-control" id="subnet-bits" placeholder="(borrowed bits)" min="0" max="29" required>
-                    <div class="invalid-feedback">
-                        Invalid Subnet bits entry!
-                    </div> 
-                </div>          
-                <button id="submit" class="btn btn-primary">Submit</button>
+                <div class="row gy-4">                    
+                    <div class="col-sm">
+                        <label for="ipv4" class="form-label visually-hidden">IPv4</label>
+                        <input type="text" class="form-control" id="ipv4" placeholder="IP Address" required>
+                        <div class="invalid-feedback">
+                            Invalid IPv4 entry!
+                        </div>            
+                    </div>
+                    <div class="col-sm">
+                        <label for="subnet-mask" class="form-label visually-hidden">Subnet Mask</label>
+                        <input type="text" class="form-control" id="subnet-mask" placeholder="Subnet Mask" required>
+                        <div class="invalid-feedback">
+                            Invalid Subnet Mask entry!
+                        </div> 
+                    </div>
+                    <div class="col-sm">
+                        <label for="subnet-bits" class="form-label visually-hidden">Subnet Bit(s)</label>
+                        <input type="number" class="form-control" id="subnet-bits" placeholder="Subnet Bit(s)" min="0" max="29" required>
+                        <div class="invalid-feedback">
+                            Invalid Subnet bits entry!
+                        </div> 
+                    </div>
+                    <div class="col-sm">
+                        <button id="submit" class="btn btn-dark">Submit</button>
+                    </div>
+                </div>                                                                
             </form>
         </section>
 
@@ -46,32 +63,35 @@
             <!-- Table -->
             <table class="table table-hover caption-top">
                 <caption id="caption">Subnet Ouput</caption>
-                <thead class="table-light">
+                <thead>
                     <tr>
-                        <th scope="col" class="w-50">Subnet#</th>
-                        <th scope="col" class="w-50"><input id="subnet-number" type="number" class="border-0 bg-transparent mx-0 w-50" min="0" value="0"/></th>
+                        <!-- <th scope="col" class="w-50">Subnet#</th>
+                        <th scope="col" class="w-50"><input id="subnet-number" type="number" class="border-0 bg-transparent mx-0 w-50" min="0" value="0"/></th> -->
+                        <th scope="col" class="w-50">Subnet <input id="subnet-number" type="number" class="border-0 bg-transparent mx-0 w-50" min="0" value="0"/></th>
+                        <th scope="col" class="w-25"></th>
+                        <th scope="col" class="w-50">Host(s): <span id="host">0</span></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <th scope="row">Network Address</th>
-                        <td id="network-address">0</td>
-
+                        <td id="network-address">0.0.0.0</td>
+                        <td id="network-address">/0</td>
                     </tr>
                     <tr>
                         <th scope="row">First Usable Address</th>
-                        <td id="first-usable-address">0</td>
-
+                        <td id="first-usable-address">0.0.0.0</td>
+                        <td id="network-address">/0</td>
                     </tr>
                     <tr>
                         <th scope="row">Last Usable Address</th>
-                        <td id="last-usable-address">0</td>
-
+                        <td id="last-usable-address">0.0.0.0</td>
+                        <td id="network-address">/0</td>
                     </tr>
                     <tr>
                         <th scope="row">Broadcast Address</th>
-                        <td id="broadcast-address">0</td>
-
+                        <td id="broadcast-address">0.0.0.0</td>
+                        <td id="network-address">/0</td>
                     </tr>
                 </tbody>
             </table>

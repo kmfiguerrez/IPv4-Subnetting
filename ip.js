@@ -368,7 +368,7 @@ class Subnet {
             const CIDR = Subnet.CIDR(subnetMask);
             const numNetworks = 2 ** subnetBitsInput;
             const subnetBits = subnetBitsInput;
-            const newSubnetMask = CIDR + subnetBits;
+            const newCIDR = CIDR + subnetBits;            
             const hostPortionBits = 32 - (CIDR + subnetBitsInput);
             const networkPortionBits = 32 - (subnetBits + hostPortionBits);
             const networkPortion = ipv4Bin.split(".").join("").slice(0, networkPortionBits);
@@ -376,7 +376,7 @@ class Subnet {
             let subnet = {};
 
             if (CIDR === 0 || CIDR === 32) throw new Error("Invalid Subnet Mask or CIDR!");
-            if (newSubnetMask > 30) throw new Error("Invalid subnet bits entry!");
+            if (newCIDR > 30) throw new Error("Invalid subnet bits entry!");
                 
 
             // Declare and initialize new Subnet object.
@@ -391,7 +391,7 @@ class Subnet {
                 newSubnet.subnetMask = subnetMask;
                 
                 // Set the CIDR(Subnet Mask).
-                newSubnet.CIDR = CIDR;
+                newSubnet.CIDR = newCIDR;
                 
                 // Set the Subnet number.
                 newSubnet.subnetNumber = index;
