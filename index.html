@@ -9,10 +9,10 @@
     <title>IPv4 Subnetting</title>
 </head>
 <body>
-    <div class="container" style="font-family: 'Alexandria', sans-serif;">
+    <div class="container-fluid px-0" style="font-family: 'Alexandria', sans-serif;">
         <!-- Nav section -->
         <nav class="navbar navbar-expand-sm navbar-light bg-transparent mb-5">
-            <div class="container-fluid">
+            <div class="container">
                 <a class="navbar-brand" href="#">IPV4 SUBNETTING</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -26,7 +26,8 @@
         </nav>
         
         <!-- Form Section -->
-        <section id="form-section">
+        <main class="container min-vh-100 ">
+            <h1 class="text-center visually-hidden">IPV4 SUBNETTING</h1>
             <form class="needs-validation mb-5" novalidate>
                 <div class="row gy-4">                    
                     <div class="col-sm">
@@ -55,46 +56,76 @@
                     </div>
                 </div>                                                                
             </form>
-        </section>
+                             
+            <!-- Output -->
+            <div id="output-section">
+                <h2 id="output-header" class="text-center visually-hidden">OUTPUT</h2>
+                <!-- Table -->
+                <table class="table table-hover caption-top">
+                    <caption id="caption">Subnet Ouput</caption>
+                    <thead>
+                        <tr>
+                            <!-- <th scope="col" class="w-50">Subnet#</th>
+                            <th scope="col" class="w-50"><input id="subnet-number" type="number" class="border-0 bg-transparent mx-0 w-50" min="0" value="0"/></th> -->
+                            <th scope="col" class="w-50">Subnet <input id="subnet-number" type="number" class="border-0 bg-transparent mx-0 w-50" min="0" value="0"/></th>
+                            <th scope="col" class="w-25"></th>
+                            <th scope="col" class="w-50">Host(s): <span id="host">0</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Network Address</th>
+                            <td id="network-address">0.0.0.0</td>
+                            <td id="network-address">/0</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">First Usable Address</th>
+                            <td id="first-usable-address">0.0.0.0</td>
+                            <td id="network-address">/0</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Last Usable Address</th>
+                            <td id="last-usable-address">0.0.0.0</td>
+                            <td id="network-address">/0</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Broadcast Address</th>
+                            <td id="broadcast-address">0.0.0.0</td>
+                            <td id="network-address">/0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
 
-        <!-- Output Section -->
-        <section id="output-section">
-            <h2 id="output-header" class="text-center visually-hidden">OUTPUT</h2>
-            <!-- Table -->
-            <table class="table table-hover caption-top">
-                <caption id="caption">Subnet Ouput</caption>
-                <thead>
-                    <tr>
-                        <!-- <th scope="col" class="w-50">Subnet#</th>
-                        <th scope="col" class="w-50"><input id="subnet-number" type="number" class="border-0 bg-transparent mx-0 w-50" min="0" value="0"/></th> -->
-                        <th scope="col" class="w-50">Subnet <input id="subnet-number" type="number" class="border-0 bg-transparent mx-0 w-50" min="0" value="0"/></th>
-                        <th scope="col" class="w-25"></th>
-                        <th scope="col" class="w-50">Host(s): <span id="host">0</span></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">Network Address</th>
-                        <td id="network-address">0.0.0.0</td>
-                        <td id="network-address">/0</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">First Usable Address</th>
-                        <td id="first-usable-address">0.0.0.0</td>
-                        <td id="network-address">/0</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Last Usable Address</th>
-                        <td id="last-usable-address">0.0.0.0</td>
-                        <td id="network-address">/0</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Broadcast Address</th>
-                        <td id="broadcast-address">0.0.0.0</td>
-                        <td id="network-address">/0</td>
-                    </tr>
-                </tbody>
-            </table>
+        <section class="container-fluid min-vh-100 text-white bg-dark py-3">
+            <h2 class="text-center mb-5">IPv4 Subnetting Program</h2>
+            <div class="container">
+                <div class="row gy-4">
+                    <div class="col-12">
+                        <h3>What this app is about?</h3>
+                        <p>
+                            This app can be used to check your work whenever your're learning or practicing IPv4 subnetting. 
+                            This app is free for anyone to use.
+                        </p>
+                    </div>
+                    <div class="col-12">
+                        <h3>How to use this app?</h3>
+                        <ol>
+                            <li>Enter an IPv4 Address.</li>
+                            <li>Enter a Subnet Mask.</li>
+                            <li>Enter the number of bits (or borrowed bits) for subnet portion.</li>
+                            <li>Click the submit button.</li>
+                        </ol>
+                    </div>
+                    <div class="col-12">
+                        <h3>About the output?</h3>
+                        <p>By default the app will display the first subnet (Subnet zero).</p>
+                    </div>   
+                </div>                                
+            </div>
+            
+
         </section>
 
     </div>
