@@ -1,2 +1,10 @@
 # ignore all files in node_modules directory.
 node_modules/
+
+css/
+
+#sass-cache
+*.css.map
+*.sass.map
+*.scss.map
+

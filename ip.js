@@ -1,7 +1,7 @@
 class Subnet {
 
-    givenIPv4;
-    subnetMask;
+    // givenIPv4;
+    // subnetMask;
     subnetNumber;    
     subnetPortion;
     hostPortion;
@@ -13,8 +13,8 @@ class Subnet {
     CIDR;
 
     constructor() {
-        this.givenIPv4 = "";
-        this.subnetMask = "";
+        // this.givenIPv4 = "";
+        // this.subnetMask = "";
         this.CIDR = 0;
         this.subnetNumber = 0;
         // Convert subnetNumber to binary.
@@ -380,72 +380,60 @@ class Subnet {
                 
 
             // Declare and initialize new Subnet object.
-            for (let index = 0; index < numNetworks; index++) {
-
-                const newSubnet = new Subnet();
-
-                // Set the given IPv4 Address.
-                newSubnet.givenIPv4 = ipv4;
-
-                // Set the given Subnet Mask.
-                newSubnet.subnetMask = subnetMask;
+            const newSubnet = new Subnet();
                 
-                // Set the CIDR(Subnet Mask).
-                newSubnet.CIDR = newCIDR;
+            // Set the new CIDR(Subnet Mask).
+            newSubnet.CIDR = newCIDR;
                 
-                // Set the Subnet number.
-                newSubnet.subnetNumber = index;
+            // Set the Subnet number.
+            newSubnet.subnetNumber = subnetToFInd;
 
-                // Set the subnet portion.
-                // Convert subnetNumber to binary.
-                const subnetBin = newSubnet.subnetNumber.toString(2);
-                // Prepend leading zeros because the toString method doesn't include leading zeros.
-                const zerosToPrepend = subnetBits - subnetBin.length;
-                // If not subnetted, then the subnet portion is 0.
-                if (subnetBits === 0) {
-                    newSubnet.subnetPortion = "";
-                } else {
-                    // Otherwise subnetted.
-                    newSubnet.subnetPortion = "0".repeat(zerosToPrepend) + subnetBin;
-                }
-                
-                // Set the network portion.
-                newSubnet.networkPortion = networkPortion;
-                
-                // Initialize the hostPortion object property.
-                // Set the host portion length.
-                newSubnet.hostPortion.length = hostPortionBits;
-                // Set the host portion network address portion.
-                const hostPortionNADec = 0; // Decimal format.    
-                newSubnet.hostPortion.nap = Subnet.decToBin(hostPortionNADec, newSubnet.hostPortion.length); // Binary format.
-                // Set the host portion broadcast address portion.
-                const hostPortionBADec = 2 ** newSubnet.hostPortion.length - 1; // Decimal format.
-                newSubnet.hostPortion.bap = Subnet.decToBin(hostPortionBADec, newSubnet.hostPortion.length); // Binary format.
-                // Set the host portion first usable address portion.
-                const hostPortionFUADec = hostPortionNADec + 1; // Decimal Format.
-                newSubnet.hostPortion.fuap = Subnet.decToBin(hostPortionFUADec, newSubnet.hostPortion.length); // Binary format.
-                // Set the host portion last usable address portion.
-                const hostPortionLUADec = hostPortionBADec - 1; // Decimal format.
-                newSubnet.hostPortion.luap = Subnet.decToBin(hostPortionLUADec, newSubnet.hostPortion.length); // Binary format.
-                
-                // Set the subnet's network address.
-                newSubnet.networkAddress = Subnet.dec(newSubnet.networkPortion + newSubnet.subnetPortion + newSubnet.hostPortion.nap);
-                // Set the subnet's first usable address.
-                newSubnet.firstUsableAddress = Subnet.dec(newSubnet.networkPortion + newSubnet.subnetPortion + newSubnet.hostPortion.fuap);
-                // Set the subnet's last address.
-                newSubnet.lastUsableAddress = Subnet.dec(newSubnet.networkPortion + newSubnet.subnetPortion + newSubnet.hostPortion.luap);
-                // Set the subnet's broadcast address.
-                newSubnet.broadcastAddress = Subnet.dec(newSubnet.networkPortion + newSubnet.subnetPortion + newSubnet.hostPortion.bap);
-
-                // subnetsList.push(newSubnet);
-                if (index === subnetToFInd) {
-                    subnet = newSubnet;
-                    return subnet;
-                }
+            // Set the subnet portion.
+            // Convert subnetNumber to binary.
+            const subnetBin = newSubnet.subnetNumber.toString(2);
+            // Prepend leading zeros because the toString method doesn't include leading zeros.
+            const zerosToPrepend = subnetBits - subnetBin.length;
+            // If not subnetted, then the subnet portion is 0.
+            if (subnetBits === 0) {
+                newSubnet.subnetPortion = "";
+            } else {
+                // Otherwise subnetted.
+                newSubnet.subnetPortion = "0".repeat(zerosToPrepend) + subnetBin;
             }
-            
-            // Returns an array of object(s).
-            // return subnetsList;
+                
+            // Set the network portion.
+            newSubnet.networkPortion = networkPortion;
+                
+            // Initialize the hostPortion object property.
+            // Set the host portion length.
+            newSubnet.hostPortion.length = hostPortionBits;
+            // Set the host portion network address portion.
+            const hostPortionNADec = 0; // Decimal format.    
+            newSubnet.hostPortion.nap = Subnet.decToBin(hostPortionNADec, newSubnet.hostPortion.length); // Binary format.
+            // Set the host portion broadcast address portion.
+            const hostPortionBADec = 2 ** newSubnet.hostPortion.length - 1; // Decimal format.
+            newSubnet.hostPortion.bap = Subnet.decToBin(hostPortionBADec, newSubnet.hostPortion.length); // Binary format.
+            // Set the host portion first usable address portion.
+            const hostPortionFUADec = hostPortionNADec + 1; // Decimal Format.
+            newSubnet.hostPortion.fuap = Subnet.decToBin(hostPortionFUADec, newSubnet.hostPortion.length); // Binary format.
+            // Set the host portion last usable address portion.
+            const hostPortionLUADec = hostPortionBADec - 1; // Decimal format.
+            newSubnet.hostPortion.luap = Subnet.decToBin(hostPortionLUADec, newSubnet.hostPortion.length); // Binary format.
+                
+            // Set the subnet's network address.
+            newSubnet.networkAddress = Subnet.dec(newSubnet.networkPortion + newSubnet.subnetPortion + newSubnet.hostPortion.nap);
+            // Set the subnet's first usable address.
+            newSubnet.firstUsableAddress = Subnet.dec(newSubnet.networkPortion + newSubnet.subnetPortion + newSubnet.hostPortion.fuap);
+            // Set the subnet's last address.
+            newSubnet.lastUsableAddress = Subnet.dec(newSubnet.networkPortion + newSubnet.subnetPortion + newSubnet.hostPortion.luap);
+            // Set the subnet's broadcast address.
+            newSubnet.broadcastAddress = Subnet.dec(newSubnet.networkPortion + newSubnet.subnetPortion + newSubnet.hostPortion.bap);
+
+            // Set the subnet to be returned.
+            subnet = newSubnet;
+
+            // Finally return the subnet.
+            return subnet;
 
         } catch (error) {
             console.log(error);

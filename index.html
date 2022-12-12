@@ -4,14 +4,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="./css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@200;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+    <!-- <link rel="stylesheet" href="sidebars.css"> -->
     <title>IPv4 Subnetting</title>
 </head>
 <body>
     <div class="container-fluid px-0" style="font-family: 'Alexandria', sans-serif;">
         <!-- Nav section -->
-        <nav class="navbar navbar-expand-sm navbar-light bg-transparent mb-5">
+        <nav class="navbar navbar-expand-sm navbar-light bg-transparent mb-3 mb-md-5">
             <div class="container">
                 <a class="navbar-brand" href="#">IPV4 SUBNETTING</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,7 +22,8 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav ms-auto">
-                        <a class="nav-link" href="#">Features</a>                        
+                        <a class="nav-link" data-bs-toggle="offcanvas" href="#offcanvas" aria-controls="offcanvas">Features</a>
+                        <a class="nav-link" href="#infoSection">info</a>                         
                     </div>
                 </div>
             </div>
@@ -28,46 +32,46 @@
         <!-- Form Section -->
         <main class="container min-vh-100 ">
             <h1 class="text-center visually-hidden">IPV4 SUBNETTING</h1>
-            <form class="needs-validation mb-5" novalidate>
-                <div class="row gy-4">                    
-                    <div class="col-sm">
-                        <label for="ipv4" class="form-label visually-hidden">IPv4</label>
-                        <input type="text" class="form-control" id="ipv4" placeholder="IP Address" required>
+            <form class="needs-validation mb-3 mb-md-5" novalidate>
+                <div class="row gy-3">                    
+                    <div class="col-md">
+                        <label for="ipv4" class="form-label">IPv4 Address</label>
+                        <input type="text" class="form-control" id="ipv4" placeholder="Enter IP Address" required>
                         <div class="invalid-feedback">
                             Invalid IPv4 entry!
                         </div>            
                     </div>
-                    <div class="col-sm">
-                        <label for="subnet-mask" class="form-label visually-hidden">Subnet Mask</label>
-                        <input type="text" class="form-control" id="subnet-mask" placeholder="Subnet Mask" required>
+                    <div class="col-md">
+                        <label for="subnet-mask" class="form-label">Subnet Mask</label>
+                        <input type="text" class="form-control" id="subnet-mask" placeholder="Enter Subnet Mask" required>
                         <div class="invalid-feedback">
                             Invalid Subnet Mask entry!
                         </div> 
                     </div>
-                    <div class="col-sm">
-                        <label for="subnet-bits" class="form-label visually-hidden">Subnet Bit(s)</label>
-                        <input type="number" class="form-control" id="subnet-bits" placeholder="Subnet Bit(s)" min="0" max="29" required>
+                    <div class="col-md">
+                        <label for="subnet-bits" class="form-label">Subnet Bit(s)</label>
+                        <input type="number" class="form-control" id="subnet-bits" placeholder="Enter Subnet Bit(s)" min="0" max="29" required>
                         <div class="invalid-feedback">
                             Invalid Subnet bits entry!
                         </div> 
                     </div>
-                    <div class="col-sm">
-                        <button id="submit" class="btn btn-dark">Submit</button>
+                    <div class="col-md">
+                        <!-- The p element has custom class just to align the button whew! -->
+                        <p class="invisible h-0 mb-1  h-md-1 mb-md-2">submit</p>
+                        <button id="submit" class="btn btn-dark d-inline-block">Submit</button>                                                                        
                     </div>
                 </div>                                                                
             </form>
                              
             <!-- Output -->
-            <div id="output-section">
-                <h2 id="output-header" class="text-center visually-hidden">OUTPUT</h2>
+            <div id="output-section" class="">
+                <!-- <h2 id="output-header" class="text-center visually-hidden">OUTPUT</h2> -->
                 <!-- Table -->
-                <table class="table table-hover caption-top">
+                <!-- <table class="table table-hover caption-top">
                     <caption id="caption">Subnet Ouput</caption>
                     <thead>
                         <tr>
-                            <!-- <th scope="col" class="w-50">Subnet#</th>
-                            <th scope="col" class="w-50"><input id="subnet-number" type="number" class="border-0 bg-transparent mx-0 w-50" min="0" value="0"/></th> -->
-                            <th scope="col" class="w-50">Subnet <input id="subnet-number" type="number" class="border-0 bg-transparent mx-0 w-50" min="0" value="0"/></th>
+                            <th scope="col" class="w-50"><label for="subnet-number">Subnet</label> <input id="subnet-number" type="number" class="border-0 bg-transparent mx-0 w-50" min="0" value="0"/></th>
                             <th scope="col" class="w-25"></th>
                             <th scope="col" class="w-50">Host(s): <span id="host">0</span></th>
                         </tr>
@@ -76,29 +80,60 @@
                         <tr>
                             <th scope="row">Network Address</th>
                             <td id="network-address">0.0.0.0</td>
-                            <td id="network-address">/0</td>
+                            <td>/0</td>
                         </tr>
                         <tr>
                             <th scope="row">First Usable Address</th>
                             <td id="first-usable-address">0.0.0.0</td>
-                            <td id="network-address">/0</td>
+                            <td>/0</td>
                         </tr>
                         <tr>
                             <th scope="row">Last Usable Address</th>
                             <td id="last-usable-address">0.0.0.0</td>
-                            <td id="network-address">/0</td>
+                            <td>/0</td>
                         </tr>
                         <tr>
                             <th scope="row">Broadcast Address</th>
                             <td id="broadcast-address">0.0.0.0</td>
-                            <td id="network-address">/0</td>
+                            <td>/0</td>
                         </tr>
                     </tbody>
-                </table>
+                </table> -->
+                <p id="caption">Output</p>
+                <div class="row mb-2 border-bottom mx-0">
+                    <div class="col-md-8 ps-0">
+                        <label for="subnet-number" class="fw-bold">Subnet:</label> 
+                        <input id="subnet-number" type="number" class="border-0" min="0" value="0"/>
+                    </div>
+                    <div class="col-md-4 ps-0">
+                        <span class="fw-bold">Hosts:</span> <span id="host">0</span>
+                    </div>                    
+                </div>
+                <div class="row mb-2">
+                    <div class="col-6 col-md-4 fw-bold">Network Address</div>
+                    <div class="col-4" id="network-address">0.0.0.0</div>
+                    <div class="col-2 col-md-4 text-center text-md-start">/0</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-6 col-md-4 fw-bold">First Usable Address</div>
+                    <div class="col-4" id="first-usable-address">0.0.0.0</div>
+                    <div class="col-2 col-md-4 text-center text-md-start">/0</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-6 col-md-4 fw-bold">Last Usable Address</div>
+                    <div class="col-4" id="last-usable-address">0.0.0.0</div>
+                    <div class="col-2 col-md-4 text-center text-md-start">/0</div>
+                </div>
+                <div class="row mb-5">
+                    <div class="col-6 col-md-4 fw-bold">Broadcast Address</div>
+                    <div class="col-4" id="broadcast-address">0.0.0.0</div>
+                    <div class="col-2 col-md-4 text-center text-md-start">/0</div>
+                </div>
             </div>
         </main>
 
-        <section class="container-fluid min-vh-100 text-white bg-dark py-3">
+        <!-- Info section -->
+        <section id="infoSection" class="container-fluid min-vh-100 text-white bg-dark pt-3">
             <h2 class="text-center mb-5">IPv4 Subnetting Program</h2>
             <div class="container">
                 <div class="row gy-4">
@@ -120,18 +155,79 @@
                     </div>
                     <div class="col-12">
                         <h3>About the output?</h3>
-                        <p>By default the app will display the first subnet (Subnet zero).</p>
-                    </div>   
+                        <ul>
+                            <li>By default the app will display the first subnet (Subnet zero).</li>
+                            <li>You can find other subnets if available by clicking on the subnet label or the subnet number input next to it.</li>
+                            <li>The Hosts label represents the number of host per subnet.</li>
+                        </ul>
+                    </div>
+                    <div class="col-12">
+                        <h3>Features</h3>
+                        <p>Conversions</p>
+                        <ul>
+                            <li>IPv4 to Binary</li>
+                            <li>CIDR to Subnet Mask</li>
+                            <li>Decimal to Binary</li>
+                        </ul>
+                        <p>Format checking</p>
+                        <ul>
+                            <li>IPv4 Address</li>
+                            <li>Subnet Mask</li>                            
+                        </ul>
+                    </div>
                 </div>                                
-            </div>
-            
-
+            </div>            
         </section>
+        <footer class="container-fluid text-white bg-dark">
+            <div class="container">
+                <p class="mb-0">Karl Michael Figuerrez</p>
+            </div>            
+        </footer>
+
+        <!-- Offcanvas -->
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel" style="width: 250px;">
+            <div class="offcanvas-header border-bottom">
+                <h5 class="offcanvas-title" id="offcanvasLabel">Features</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="list-unstyled ps-0">
+                    <li class="mb-1">
+                        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
+                            data-bs-target="#conversion-collapse" aria-expanded="false">
+                            Conversions
+                        </button>
+                        <div class="collapse" id="conversion-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li><a href="#" class="link-dark rounded">IPv4<i class="bi bi-arrow-left-right mx-2"></i>Bin</a></li>
+                                <li><a href="#" class="link-dark rounded">CIDR<i class="bi bi-arrow-left-right mx-2"></i>SM</a></li>
+                                <li><a href="#" class="link-dark rounded">Octet<i class="bi bi-arrow-left-right mx-2"></i>Bin</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mb-1">
+                        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
+                            data-bs-target="#checker-collapse" aria-expanded="false">
+                            Checker
+                        </button>
+                        <div class="collapse" id="checker-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li><a href="#" class="link-dark rounded">IPv4 Address</a></li>
+                                <li><a href="#" class="link-dark rounded">Subnet Mask</a></li>                                
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        
 
     </div>
     
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> -->
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="main.js" type="module"></script>
 
 </body>

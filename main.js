@@ -50,6 +50,42 @@ const setCurrentSubnet = function(inputCurrentSubnet) {
     }
 }
 
+
+const formatNumber = (num) => {
+    /**
+     * This method adds comma when the num becomes 4 digits or more.
+     * This takes an argument of type number.
+     * Returns Number | String.
+     */
+
+    if (num < 1000) {
+        console.log(num)
+        return num;
+    }
+
+    // Add comma.
+    const text = num.toString();
+    let textArray = text.split("");
+    const textArrayReversed = textArray.reverse();
+    // Add a comma after every three elements.
+    let count = 0;
+    for (let index = 0; index < textArrayReversed.length; index++) {
+        if (count === 3) {
+            textArrayReversed.splice(index, 0, ",")
+            count = 0;
+            continue;
+        }
+        count++;        
+    }
+
+    // Turn it to its original order.
+    textArray = textArrayReversed.reverse();
+    // Return it as string.
+    console.log(textArray.join(""));
+    return textArray.join("");    
+}
+
+
 const checkUserInputs = () => {
     /**
      * This method will check user inputs (All the input elements.)
@@ -79,6 +115,7 @@ const checkUserInputs = () => {
     // Otherwise valid.
     return true;
 }
+
 
 // View.
 const renderError = (error, preText="Error", alertType="danger") => {
@@ -111,6 +148,9 @@ const renderError = (error, preText="Error", alertType="danger") => {
     alert.appendChild(button);
     
     outputSection.insertAdjacentElement("afterbegin", alert);
+
+    // Resets.
+    // subnetNumberInput.value = 0;
 }
 
 
@@ -132,14 +172,23 @@ const render = function() {
     const fuacCIDR = fuac.nextElementSibling;
     const luacCIDR = luac.nextElementSibling;
     const baCIDR = bac.nextElementSibling;
+
+    // Set the max attribute of the subnet number input for users convience.
+    subnetNumberInput.setAttribute("max", `${numOfSubnets - 1}`);
     
     // Display.
-    caption.innerHTML = `There are ${numOfSubnets} subnet(s)`;
+    if (numOfSubnets === 1) {
+        caption.innerHTML = `There is ${numOfSubnets} subnet`;    
+    } else {
+        caption.innerHTML = `There are ${formatNumber(numOfSubnets)} subnets`;
+    }
+    
     nac.innerHTML = networkAddress;
     fuac.innerHTML = firstUsableAddress;
     luac.innerHTML = lastUsableAddress;
     bac.innerHTML = broadcastAddress;
-    hostPerSubnet.innerHTML = hostPerSubnetValue;
+    // hostPerSubnet.innerHTML = hostPerSubnetValue;
+    hostPerSubnet.innerHTML = formatNumber(hostPerSubnetValue);
     naCIDR.innerHTML = `/${subnet.CIDR}`;
     fuacCIDR.innerHTML = `/${subnet.CIDR}`;
     luacCIDR.innerHTML = `/${subnet.CIDR}`;
@@ -147,8 +196,12 @@ const render = function() {
 
     // Popover will pop up once.
     if ( !popMessage ) {
-        popover.show();
-        popMessage = true;    
+        // Popover will pop up in 3s.
+        setTimeout(() => {
+            popover.show();
+            popMessage = true;
+        }, 3000)
+        
     }        
 }
 
