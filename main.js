@@ -16,6 +16,7 @@ const bac = document.getElementById("broadcast-address");
 const caption = document.getElementById("caption");
 const subnetNumberInput = document.getElementById("subnet-number");
 const hostPerSubnet = document.getElementById("host");
+const conversionModal = document.getElementById('conversionModal')
 
 // Create Popover.
 const popover = new bootstrap.Popover(subnetNumberInput, {        
@@ -32,11 +33,11 @@ let popMessage = false;
 // Current subnet to be displayed.
 let currentSubnet = {};
 
-// Set the current subnet variable.
+// Set the current subnet constiable.
 const setCurrentSubnet = function(inputCurrentSubnet) {
     /**
      * This method takes a parameter of type object.
-     * This method will set the values of the subnets variable
+     * This method will set the values of the subnets constiable
      * in the model section.
      */
      
@@ -59,7 +60,6 @@ const formatNumber = (num) => {
      */
 
     if (num < 1000) {
-        console.log(num)
         return num;
     }
 
@@ -80,8 +80,8 @@ const formatNumber = (num) => {
 
     // Turn it to its original order.
     textArray = textArrayReversed.reverse();
-    // Return it as string.
-    console.log(textArray.join(""));
+    
+    // Return it as string.    
     return textArray.join("");    
 }
 
@@ -107,7 +107,7 @@ const checkUserInputs = () => {
     if( !Subnet.checkSM(subnetMask) || CIDR === 0 || CIDR === 32 ) return new Error("Invalid Subnet Mask!");
 
     // Third check the subnet bits entry.
-    if( (CIDR + subnetBits) > 30 ) return new Error("Invalid subnet bits entry!");
+    if( isNaN(subnetBits) || (CIDR + subnetBits) > 30 ) return new Error("Invalid subnet bits entry!");
 
     // Fourth check the subnet number input.    
     if( subnetNumber < 0 || subnetNumber > (numberOfNetworks - 1) ) return new Error(`Subnet ${subnetNumber} does not exists!`);
@@ -156,7 +156,7 @@ const renderError = (error, preText="Error", alertType="danger") => {
 
 const render = function() {
     /**
-     * This method will render whatever is in the current subnet variable
+     * This method will render whatever is in the current subnet constiable
      * in the model section.
      * Returns null.
      */
@@ -214,7 +214,7 @@ const getSubnet = function(subnetNumber) {
     const subnet = Subnet.getSubnets(ipv4, subnetMask, subnetBits, subnetNumber);    
     
     // Check user inputs.
-    const result = checkUserInputs()     
+    const result = checkUserInputs() 
     if (result !== true) {
         // Display error to the user.
         renderError(result);
@@ -230,21 +230,37 @@ const getSubnet = function(subnetNumber) {
 
 
 // Event listeners.
-submitButton.addEventListener("click", () => {
+// submitButton.addEventListener("click", () => {
     
-    const form = document.querySelector('.needs-validation');
+//     const forms = document.querySelectorAll('.needs-validation');
    
+//     Array.from(forms).forEach(form => {
+//         form.addEventListener('submit', function (event) {
+//             event.preventDefault();
+//             if (!form.checkValidity()) {   
+                
+//                 event.stopPropagation();
+//             }
+    
+//             form.classList.add('was-validated')
+//         })
+//     })  
+
+// });
+
+const forms = document.querySelectorAll('.needs-validation');
+   
+Array.from(forms).forEach(form => {
     form.addEventListener('submit', function (event) {
         event.preventDefault();
-        if (!form.checkValidity()) {            
+        if (!form.checkValidity()) {   
+            
             event.stopPropagation();
         }
 
         form.classList.add('was-validated')
     })
-
-
-});
+})     
 
 submitButton.addEventListener("click", () => {
     
@@ -270,3 +286,59 @@ subnetNumberInput.addEventListener("change", () => {
     getSubnet(subnetToFind);
 
 });
+
+conversionModal.addEventListener('show.bs.modal', function (event) {
+    // Link that triggered the modal
+    const link = event.relatedTarget
+
+    // Extract info from data-* attributes
+    const conversionType = link.getAttribute('data-conversion');
+    const from = link.getAttribute('data-from');
+    const to = link.getAttribute('data-to');
+
+    // Update the modal's content.
+    const conversionInputLabel = conversionModal.querySelector('#conversion-input-label');
+    const conversionInput = conversionModal.querySelector('#conversion-input');
+    const conversionOutputLabel = conversionModal.querySelector('#conversion-output-label');
+    const conversionOutput = conversionModal.querySelector('#conversion-output');
+    const modalSubmitButton = conversionModal.querySelector('#modal-button');        
+
+    conversionInputLabel.textContent = from;
+    conversionOutputLabel.textContent = to;
+
+    // Update input's type based on conversion type for users convenience.
+    // By default the input's type is text.
+    if (conversionType === "cidr-sm" || conversionType === "dec-bin") {
+        conversionInput.setAttribute("type", "number");
+    } else {
+        // if conversion type is ipv4-bin.
+        conversionInput.setAttribute("type", "text");
+    }
+
+    // Reset input and output display text.
+    conversionInput.value = "";
+    conversionOutput.textContent = "Output";
+    console.log("outer: ", conversionType)
+    // Add event handler to Modal's submit button.
+    modalSubmitButton.addEventListener("click", () => {
+        console.log("inner: ", conversionType)
+        // Perform the conversion.
+        if (conversionType === "ipv4-bin") {            
+            const ipv4 = conversionInput.value;
+            const result = Subnet.bin(ipv4);
+            conversionOutput.textContent = result || "Output";
+        }
+        else if (conversionType === "cidr-sm") {
+            const CIDR = parseInt(conversionInput.value);
+            const result = Subnet.subnetMask(CIDR);
+            conversionOutput.textContent = result || "Output";
+        }
+        else {
+            const decimal = parseInt(conversionInput.value);
+            const result = Subnet.decToBin(decimal);
+            conversionOutput.textContent = result || "Output";
+        }
+    })
+
+    
+})

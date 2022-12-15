@@ -159,7 +159,7 @@ class Subnet {
         return true
     }
 
-    static decToBin(decimal, numOfDigits) {
+    static decToBin(decimal, numOfDigits=0) {
         /**
          * This method takes two parameters.
          * The numOfDigits param is the number of digits to use
@@ -170,8 +170,8 @@ class Subnet {
 
         try {
             if(decimal === undefined) throw new Error("Did not pass in an argument!");
-            if(decimal === "") throw new Error("Argument cannot be empty!");
-            if(typeof numOfDigits !== "number") throw new Error("Second argument must be of type number!");
+            if(decimal === "") throw new Error("Argument cannot be empty!"); 
+            if(isNaN(decimal) || isNaN(decimal) || typeof decimal !== "number" || typeof numOfDigits !== "number") throw new Error("Arguments must be of number!");
 
 
             // If decimal input is a string then parse it into decimal.
@@ -183,7 +183,7 @@ class Subnet {
             
             // If the second argument is omitted
             // then just parse the decimal without appending leading zeros.
-            if (numOfDigits === undefined) {
+            if (numOfDigits === undefined || numOfDigits === 0) {
                 return binary;
             } else {
                 // Prepend leading zeros.
@@ -217,7 +217,8 @@ class Subnet {
             
             // Turn each octet to binaries and put them in an array.
             ipv4AsBin = ipv4InArray.map(elem => {
-                return this.decToBin(elem, 8);
+                const octet = parseInt(elem);
+                return this.decToBin(octet, 8);
             })
 
             // Return them written in a dot notation in a string.
@@ -319,7 +320,7 @@ class Subnet {
         try {
             if(cidr === undefined) throw new Error("Did not pass in an argument!");
             if(cidr === "") throw new Error("Argument cannot be empty!");
-            if(typeof cidr !== "number") throw new Error("Argument must be a number!");
+            if(isNaN(cidr) || typeof cidr !== "number") throw new Error("Argument must be a number!");
             if(cidr < 0 || cidr > 32) throw new Error("CIDR is out of range!");
 
             let subnetMask = "";
