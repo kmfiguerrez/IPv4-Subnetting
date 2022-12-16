@@ -4,6 +4,7 @@ const ipv4Input = document.querySelector("#ipv4");
 const smInput = document.querySelector("#subnet-mask");
 const subnetBitsInput = document.getElementById("subnet-bits");
 const submitButton = document.querySelector("#submit");
+const outputSection = document.getElementById("output-section");
 // const outputArea = document.querySelector("#output");
 // nac means Network Address Container.
 const nac = document.getElementById("network-address");
@@ -17,6 +18,9 @@ const caption = document.getElementById("caption");
 const subnetNumberInput = document.getElementById("subnet-number");
 const hostPerSubnet = document.getElementById("host");
 const conversionModal = document.getElementById('conversionModal')
+const conversionInput = conversionModal.querySelector('#conversion-input');
+const conversionOutput = conversionModal.querySelector('#conversion-output');
+const modalSubmitButton = document.getElementById('modal-button');
 
 // Create Popover.
 const popover = new bootstrap.Popover(subnetNumberInput, {        
@@ -99,33 +103,66 @@ const checkUserInputs = () => {
     const subnetBits = parseInt(subnetBitsInput.value);
     const numberOfNetworks = 2 ** subnetBits;
     const subnetNumber = parseInt(subnetNumberInput.value);
+    let errorMessage = "";
+    let numOfError = 0;
+    
 
     // Fist check the ip address.
-    if( !Subnet.checkFormat(ipv4) ) return new Error("Invalid IPv4!");
+    if( !Subnet.checkFormat(ipv4) ) {
+        // Remove first the .is-valid if it's exists.
+        ipv4Input.classList.remove("is-valid");
+        // Then add .is-invalid.
+        ipv4Input.classList.add("is-invalid");
+        // Set error message.
+        errorMessage = "Incorrect IPv4 Address!";
+        numOfError++;
+    }
 
     // Second check the subnet mask.
-    if( !Subnet.checkSM(subnetMask) || CIDR === 0 || CIDR === 32 ) return new Error("Invalid Subnet Mask!");
-
+    if( !Subnet.checkSM(subnetMask) || CIDR === 0 || CIDR === 32 ) {
+        // Remove first the .is-valid if it's exists.
+        smInput.classList.remove("is-valid");
+        // Then add .is-invalid.
+        smInput.classList.add("is-invalid");
+        // Set error message.
+        errorMessage = "Incorrect Subnet Mask!";
+        numOfError++;
+    }
+    
     // Third check the subnet bits entry.
-    if( isNaN(subnetBits) || (CIDR + subnetBits) > 30 ) return new Error("Invalid subnet bits entry!");
+    if( isNaN(subnetBits) || (CIDR + subnetBits) > 30 ) {
+        // Remove first the .is-valid if it's exists.
+        subnetBitsInput.classList.remove("is-valid");
+        // Then add .is-invalid.
+        subnetBitsInput.classList.add("is-invalid");
+        // Set error message.
+        errorMessage = "Incorrect Subnet Bits!";
+        numOfError++;
+    } 
 
     // Fourth check the subnet number input.    
-    if( subnetNumber < 0 || subnetNumber > (numberOfNetworks - 1) ) return new Error(`Subnet ${subnetNumber} does not exists!`);
+    if( subnetNumber < 0 || subnetNumber > (numberOfNetworks - 1) ) {
+        errorMessage = `Subnet ${subnetNumber} does not exists!`;
+        numOfError++;
+    } 
 
-    // Otherwise valid.
-    return true;
+    if (numOfError > 1) {
+        return new Error("Incorrect IP Information!");
+    } else if (numOfError === 1) {
+        return new Error(errorMessage);
+    } else {
+        return true;
+    }
 }
 
 
 // View.
-const renderError = (error, preText="Error", alertType="danger") => {
+const renderWarningMessage = (error, attachTo=outputSection, preText="Error", alertType="danger") => {
     /**
      * This method displays error to the user using bootstrap alert component.
      * This method takes an error object and two optional arguments.
-     * Returns null.
+     * Returns html object.
      */
-
-    const outputSection = document.getElementById("output-section");
     
     // Create alert element
     const alert = document.createElement("div");
@@ -147,10 +184,7 @@ const renderError = (error, preText="Error", alertType="danger") => {
 
     alert.appendChild(button);
     
-    outputSection.insertAdjacentElement("afterbegin", alert);
-
-    // Resets.
-    // subnetNumberInput.value = 0;
+    attachTo.insertAdjacentElement("afterbegin", alert);
 }
 
 
@@ -217,7 +251,7 @@ const getSubnet = function(subnetNumber) {
     const result = checkUserInputs() 
     if (result !== true) {
         // Display error to the user.
-        renderError(result);
+        renderWarningMessage(result);
         return;
     } 
     
@@ -230,37 +264,34 @@ const getSubnet = function(subnetNumber) {
 
 
 // Event listeners.
-// submitButton.addEventListener("click", () => {
-    
-//     const forms = document.querySelectorAll('.needs-validation');
-   
-//     Array.from(forms).forEach(form => {
-//         form.addEventListener('submit', function (event) {
-//             event.preventDefault();
-//             if (!form.checkValidity()) {   
-                
-//                 event.stopPropagation();
-//             }
-    
-//             form.classList.add('was-validated')
-//         })
-//     })  
-
-// });
-
-const forms = document.querySelectorAll('.needs-validation');
-   
+const forms = document.querySelectorAll('form');
 Array.from(forms).forEach(form => {
+    // Add event handlers to form elements.
     form.addEventListener('submit', function (event) {
         event.preventDefault();
-        if (!form.checkValidity()) {   
-            
-            event.stopPropagation();
-        }
+        event.stopPropagation();
 
-        form.classList.add('was-validated')
+                
     })
-})     
+})
+
+const formInputs = document.querySelectorAll("input[class='form-control']");
+Array.from(formInputs).forEach(input => {    
+
+    // Add event handlers to each form input.
+    input.addEventListener("change", function () {
+        // Remove first the .is-invalid if it's exists.
+        input.classList.remove("is-invalid");
+
+        // Check if the input value is empty or not.
+        if (this.value === "") {
+            input.classList.remove("is-valid");
+            input.classList.add("is-invalid");
+        } else {
+            input.classList.add("is-valid");
+        }
+    })
+})
 
 submitButton.addEventListener("click", () => {
     
@@ -287,27 +318,40 @@ subnetNumberInput.addEventListener("change", () => {
 
 });
 
-conversionModal.addEventListener('show.bs.modal', function (event) {
+conversionModal.addEventListener('show.bs.modal', event => {
     // Link that triggered the modal
     const link = event.relatedTarget
 
     // Extract info from data-* attributes
+    // Then set it to Modal's submit button to be used to perform conversion.
     const conversionType = link.getAttribute('data-conversion');
     const from = link.getAttribute('data-from');
     const to = link.getAttribute('data-to');
 
+    // Set extracted data to Modal's submit button.
+    modalSubmitButton.setAttribute("data-conversion", `${conversionType}`);
+
     // Update the modal's content.
     const conversionInputLabel = conversionModal.querySelector('#conversion-input-label');
-    const conversionInput = conversionModal.querySelector('#conversion-input');
-    const conversionOutputLabel = conversionModal.querySelector('#conversion-output-label');
-    const conversionOutput = conversionModal.querySelector('#conversion-output');
-    const modalSubmitButton = conversionModal.querySelector('#modal-button');        
+    const conversionOutputLabel = conversionModal.querySelector('#conversion-output-label');    
+    const modalBody = document.querySelector(".modal-body");
 
     conversionInputLabel.textContent = from;
     conversionOutputLabel.textContent = to;
 
+    // Display message to the user if the operation is decimal to binary.    
+    if (conversionType === "dec-bin") {        
+        const message = new Error("In the output leading zeros are omitted!");
+        renderWarningMessage(message, modalBody, "Note", "info");
+    } else {
+        // Only show the alert html element to dec-bin operation.
+        const firstChild = modalBody.firstElementChild;
+        if (firstChild instanceof HTMLDivElement) {
+            modalBody.removeChild(modalBody.firstElementChild);            
+        }
+    }
+
     // Update input's type based on conversion type for users convenience.
-    // By default the input's type is text.
     if (conversionType === "cidr-sm" || conversionType === "dec-bin") {
         conversionInput.setAttribute("type", "number");
     } else {
@@ -318,27 +362,59 @@ conversionModal.addEventListener('show.bs.modal', function (event) {
     // Reset input and output display text.
     conversionInput.value = "";
     conversionOutput.textContent = "Output";
-    console.log("outer: ", conversionType)
-    // Add event handler to Modal's submit button.
-    modalSubmitButton.addEventListener("click", () => {
-        console.log("inner: ", conversionType)
-        // Perform the conversion.
-        if (conversionType === "ipv4-bin") {            
-            const ipv4 = conversionInput.value;
-            const result = Subnet.bin(ipv4);
-            conversionOutput.textContent = result || "Output";
-        }
-        else if (conversionType === "cidr-sm") {
-            const CIDR = parseInt(conversionInput.value);
-            const result = Subnet.subnetMask(CIDR);
-            conversionOutput.textContent = result || "Output";
-        }
-        else {
-            const decimal = parseInt(conversionInput.value);
-            const result = Subnet.decToBin(decimal);
-            conversionOutput.textContent = result || "Output";
-        }
-    })
 
+    // Make sure that the validation text won't show up when the modal is open with an empty input's value.
+    if (conversionInput.value === "") conversionInput.classList.remove("is-invalid", "is-valid");
     
+    console.log(conversionType);    
 })
+
+// Add event handler to Modal's submit button.
+modalSubmitButton.addEventListener("click", () => {
+
+    // Extract info from data-conversion attribute.
+    const conversionType = modalSubmitButton.getAttribute("data-conversion");
+    console.log(conversionType);
+
+    // Perform the conversion.
+    if (conversionType === "ipv4-bin") {            
+        const ipv4 = conversionInput.value;
+        const result = Subnet.bin(ipv4);
+
+        if (!result) {
+            // Remove first the .is-valid if it's exists.
+            conversionInput.classList.remove("is-valid");
+            // Then add .is-invalid.
+            conversionInput.classList.add("is-invalid");    
+        }            
+
+        conversionOutput.textContent = result || "Output";
+    } 
+    else if (conversionType === "cidr-sm") {
+        const CIDR = parseInt(conversionInput.value);
+        const result = Subnet.subnetMask(CIDR);
+
+        if (!result) {
+            // Remove first the .is-valid if it's exists.
+            conversionInput.classList.remove("is-valid");
+            // Then add .is-invalid.
+            conversionInput.classList.add("is-invalid");    
+        }
+
+        conversionOutput.textContent = result || "Output";
+    } 
+    else {
+        const decimal = parseInt(conversionInput.value);
+        const result = Subnet.decToBin(decimal);
+
+        if (!result) {
+            // Remove first the .is-valid if it's exists.
+            conversionInput.classList.remove("is-valid");
+            // Then add .is-invalid.
+            conversionInput.classList.add("is-invalid");    
+        }
+
+        conversionOutput.textContent = result || "Output";
+    }
+
+})    

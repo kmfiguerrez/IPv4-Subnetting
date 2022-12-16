@@ -30,25 +30,34 @@
         <!-- Form Section -->
         <main class="container min-vh-100 ">
             <h1 class="text-center visually-hidden">IPV4 SUBNETTING</h1>
-            <form class="needs-validation mb-3 mb-md-5" novalidate>
+            <form class=" mb-3 mb-md-5">
                 <div class="row gy-3">                    
                     <div class="col-md">
                         <label for="ipv4" class="form-label">IPv4 Address</label>
-                        <input type="text" class="form-control" id="ipv4" placeholder="Enter IP Address" required>
+                        <input type="text" class="form-control" id="ipv4" placeholder="Enter IP Address">
+                        <div class="valid-feedback">
+                            Looks Good!
+                        </div> 
                         <div class="invalid-feedback">
                             Invalid IPv4 entry!
                         </div>            
                     </div>
                     <div class="col-md">
                         <label for="subnet-mask" class="form-label">Subnet Mask</label>
-                        <input type="text" class="form-control" id="subnet-mask" placeholder="Enter Subnet Mask" required>
+                        <input type="text" class="form-control" id="subnet-mask" placeholder="Enter Subnet Mask">
+                        <div class="valid-feedback">
+                            Looks Good!
+                        </div> 
                         <div class="invalid-feedback">
                             Invalid Subnet Mask entry!
                         </div> 
                     </div>
                     <div class="col-md">
                         <label for="subnet-bits" class="form-label">Subnet Bit(s)</label>
-                        <input type="number" class="form-control" id="subnet-bits" placeholder="Enter Subnet Bit(s)" min="0" max="29" required>
+                        <input type="number" class="form-control" id="subnet-bits" placeholder="Enter Subnet Bit(s)" min="0" max="29">
+                        <div class="valid-feedback">
+                            Looks Good!
+                        </div> 
                         <div class="invalid-feedback">
                             Invalid Subnet bits entry!
                         </div> 
@@ -62,48 +71,17 @@
             </form>
                              
             <!-- Output -->
-            <div id="output-section" class="">
+            <div id="output-section" class="pb-5">
                 <!-- <h2 id="output-header" class="text-center visually-hidden">OUTPUT</h2> -->
-                <!-- Table -->
-                <!-- <table class="table table-hover caption-top">
-                    <caption id="caption">Subnet Ouput</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col" class="w-50"><label for="subnet-number">Subnet</label> <input id="subnet-number" type="number" class="border-0 bg-transparent mx-0 w-50" min="0" value="0"/></th>
-                            <th scope="col" class="w-25"></th>
-                            <th scope="col" class="w-50">Host(s): <span id="host">0</span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">Network Address</th>
-                            <td id="network-address">0.0.0.0</td>
-                            <td>/0</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">First Usable Address</th>
-                            <td id="first-usable-address">0.0.0.0</td>
-                            <td>/0</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Last Usable Address</th>
-                            <td id="last-usable-address">0.0.0.0</td>
-                            <td>/0</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Broadcast Address</th>
-                            <td id="broadcast-address">0.0.0.0</td>
-                            <td>/0</td>
-                        </tr>
-                    </tbody>
-                </table> -->
                 <p id="caption">Output</p>
                 <div class="row mb-2 border-bottom mx-0">
                     <div class="col-md-8 ps-0">
-                        <label for="subnet-number" class="fw-bold">Subnet:</label> 
-                        <input id="subnet-number" type="number" class="border-0" min="0" value="0"/>
+                        <form>
+                            <label for="subnet-number" class="fw-bold">Subnet:</label>
+                            <input id="subnet-number" type="number" class="border-0" min="0" value="0"/>
+                        </form>                        
                     </div>
-                    <div class="col-md-4 ps-0">
+                    <div class="col-md-4 ps-0 ps-md-3">
                         <span class="fw-bold">Hosts:</span> <span id="host">0</span>
                     </div>                    
                 </div>
@@ -122,7 +100,7 @@
                     <div class="col-4" id="last-usable-address">0.0.0.0</div>
                     <div class="col-2 col-md-4 text-center text-md-start">/0</div>
                 </div>
-                <div class="row mb-5">
+                <div class="row">
                     <div class="col-6 col-md-4 fw-bold">Broadcast Address</div>
                     <div class="col-4" id="broadcast-address">0.0.0.0</div>
                     <div class="col-2 col-md-4 text-center text-md-start">/0</div>
@@ -170,7 +148,8 @@
                         <p>Format checking</p>
                         <ul>
                             <li>IPv4 Address</li>
-                            <li>Subnet Mask</li>                            
+                            <li>Subnet Mask</li>
+                            <li>IPv4 Address Type</li>                            
                         </ul>
                     </div>
                 </div>                                
@@ -228,7 +207,8 @@
                         <div class="collapse" id="checker-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                 <li><a href="#" class="link-dark rounded">IPv4 Address</a></li>
-                                <li><a href="#" class="link-dark rounded">Subnet Mask</a></li>                                
+                                <li><a href="#" class="link-dark rounded">Subnet Mask</a></li>
+                                <li><a href="#" class="link-dark rounded">IPv4 Address Type</a></li>          
                             </ul>
                         </div>
                     </li>
@@ -237,7 +217,8 @@
         </div>
 
         <!-- Modals -->
-        <div class="modal fade" id="conversionModal" tabindex="-1" aria-labelledby="conversionModalLabel" aria-hidden="true">
+        <!-- Conversion Modal -->
+        <div class="modal fade" id="conversionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="conversionModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -245,10 +226,13 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="conversionForm" class="needs-validation" novalidate>
+                        <form>
                             <div class="mb-3">
                                 <label id="conversion-input-label" for="conversion-input" class="col-form-label">From:</label>
-                                <input type="text" class="form-control" id="conversion-input" placeholder="Input" required>
+                                <input type="text" class="form-control" id="conversion-input" placeholder="Input">
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div> 
                                 <div class="invalid-feedback">
                                     Invalid entry!
                                 </div> 
@@ -268,6 +252,8 @@
                 </div>
             </div>
         </div>
+        <!-- Checker Modal -->
+        
 
     </div>
 

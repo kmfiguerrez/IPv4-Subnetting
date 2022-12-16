@@ -277,6 +277,138 @@ class Subnet {
         }
     }
 
+    static ipv4ToDec = (ipv4AddressInput) => {
+        /**
+         * This method converts ipv4 address to decimal.
+         * This method takes an argument of type string.
+         * Returns Number.
+         */
+    
+        try {
+            if (typeof ipv4AddressInput !== "string") throw new Error("Argument must a string!");
+            if (ipv4AddressInput === "" || ipv4AddressInput === undefined || ipv4AddressInput === null) throw new Error("Argument cannot be empty!");
+    
+            // Convert it to contiguous binaries.
+            const binaries = Subnet.bin(ipv4AddressInput).split(".").join("");
+
+            // Convert it to decimal.
+            const decimal = parseInt(binaries, 2);
+    
+            // Return decimal
+            return decimal;
+    
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    static ipv4Type = (ipv4AddressInput) => {
+        /**
+         * This method determines the type of IPv4 Address.
+         * This method takes an argument of type string.
+         * Returns a String.
+         */
+    
+        try {
+            if (typeof ipv4AddressInput !== "string") throw new Error("Argument must a string!");
+            if (ipv4AddressInput === "" || ipv4AddressInput === undefined || ipv4AddressInput === null) throw new Error("Argument cannot be empty!");
+                    
+            const ipv4 = {
+                privateAddresses: {
+                    classA: ["10.0.0.0", "10.255.255.255"],
+                    classB: ["172.16.0.0", "172.31.255.255"],
+                    classC: ["192.168.0.0", "192.168.255.255"]                 
+                },
+                publicAddresses: {
+                    classA: ["1.0.0.0", "126.255.255.255"],
+                    classB: ["128.0.0.0", "191.255.255.255"],
+                    classC: ["192.0.0.0 ", "223.255.255.255"]                 
+                },
+                loopbackAddresses: ["127.0.0.0", "127.255.255.255"],
+                linkLocalAddresses: ["169.254.0.0", "169.254.255.255"],
+                multicastAddresses: ["224.0.0.0", "239.255.255.255"],
+                reservedAddresses: ["240.0.0.0", "255.255.255.254"],
+                broadcastAddress: "255.255.255.255"
+            }
+                    
+            let lowBound = 0;
+            let highBound = 0;
+            let ipv4Address = this.ipv4ToDec(ipv4AddressInput);
+            
+            // Loop through ipv4 properties.
+            for (const type in ipv4) {
+                // console.log(type);
+                // Check for private addresses.
+                if (type === "privateAdresses") {
+                    for (const classx in ipv4.privateAddresses) {
+                        const privateAddressRange = ipv4.privateAdresses[classx];                    
+                        lowBound = this.ipv4ToDec(privateAddressRange[0]);
+                        highBound = this.ipv4ToDec(privateAddressRange[1]);            
+                        
+                        if (ipv4Address >= lowBound && ipv4Address <= highBound) {                        
+                            return "Private Address";
+                        }
+                    }
+                }
+                // Check for public addresses.
+                if (type === "publicAddresses") {
+                    for (const classx in ipv4.publicAddresses) {
+                        const publicAddressRange = ipv4.publicAddresses[classx];                    
+                        lowBound = this.ipv4ToDec(publicAddressRange[0]);
+                        highBound = this.ipv4ToDec(publicAddressRange[1]);            
+                        
+                        if (ipv4Address >= lowBound && ipv4Address <= highBound) {                        
+                            return "Public Address";
+                        }
+                    }
+                }
+                // Check for loopback addresses.
+                if (type === "loopbackAddresses") {
+                    lowBound = this.ipv4ToDec(ipv4.loopbackAddresses[0]);
+                    highBound = this.ipv4ToDec(ipv4.loopbackAddresses[1]); 
+                    if (ipv4Address >= lowBound && ipv4Address <= highBound) {                       
+                        return "Loopback Address";
+                    }
+                }
+                // Check for link-local addresses.
+                if (type === "linkLocalAddresses") {
+                    lowBound = this.ipv4ToDec(ipv4.linkLocalAddresses[0]);
+                    highBound = this.ipv4ToDec(ipv4.linkLocalAddresses[1]); 
+                    if (ipv4Address >= lowBound && ipv4Address <= highBound) {                       
+                        return "Link-local Address";
+                    }
+                }                
+                // Check for multicast addresses.
+                if (type === "multicastAdresses") {
+                    lowBound = this.ipv4ToDec(ipv4.multicastAddresses[0]);
+                    highBound = this.ipv4ToDec(ipv4.multicastAdresses[1]); 
+                    if (ipv4Address >= lowBound && ipv4Address <= highBound) {                       
+                        return "Multicast Address";
+                    }
+                }
+                // Check for reserved addresses.
+                if (type === "reservedAddresses") {
+                    lowBound = this.ipv4ToDec(ipv4.reservedAddresses[0]);
+                    highBound = this.ipv4ToDec(ipv4.reservedAddresses[1]); 
+                    if (ipv4Address >= lowBound && ipv4Address <= highBound) {                       
+                        return "Reserved Address";
+                    }
+                }
+                // Check if it's a broadcast address.
+                if (type === "broadcastAddress") {
+                    const broadcastAddress = this.ipv4ToDec(ipv4.broadcastAddress);
+                    if (ipv4Address === broadcastAddress) return "Broadcast Address";                
+                }
+            }
+            
+            // Otherwise.
+            return "Reserved Address";
+    
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     static CIDR(subnetMask) {
         /**
          * This method takes a parameter of type string 
@@ -366,8 +498,7 @@ class Subnet {
             const ipv4 = ipv4Input;
             const ipv4Bin = Subnet.bin(ipv4);
             const subnetMask = smInput;
-            const CIDR = Subnet.CIDR(subnetMask);
-            const numNetworks = 2 ** subnetBitsInput;
+            const CIDR = Subnet.CIDR(subnetMask);            
             const subnetBits = subnetBitsInput;
             const newCIDR = CIDR + subnetBits;            
             const hostPortionBits = 32 - (CIDR + subnetBitsInput);
@@ -440,7 +571,6 @@ class Subnet {
             console.log(error);
         }
     }
-
 }
 
 export { Subnet };
