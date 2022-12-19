@@ -157,7 +157,28 @@
         </section>
         <footer class="container-fluid text-white bg-dark">
             <div class="container">
-                <p class="mb-0">Karl Michael Figuerrez</p>
+                <div class="row">
+                    <div class="col-sm">
+                        <p class="mb-0 d-inline-block">If you like this app you can buy me a coffee
+                            <a href="https://paypal.me/kmfiguerrez" target="_blank" rel="noopener noreferrer">
+                                <i class="bi bi-cup-hot"></i> </p>
+                            </a>                                                    
+                    </div>
+                    <div class="col-sm">
+                        <figure class="text-center">
+                            <blockquote class="blockquote">
+                                <p class="small d-inline-block">&copy IPv4 Subnetting 2022 | All Rights Reserved.</p>
+                            </blockquote>
+                            <figcaption class="blockquote-footer">
+                                <a href="https://www.linkedin.com/in/kmfiguerrez/" class="text-reset text-decoration-none" target="_blank">
+                                    Karl Michael Figuerrez
+                                </a>                             
+                                <!-- Karl Michael Figuerrez -->
+                            </figcaption>
+                        </figure>
+                    </div>
+                </div>
+                
             </div>            
         </footer>
 
@@ -178,37 +199,52 @@
                         <div class="collapse" id="conversion-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                 <li>
-                                    <a href="#" class="link-dark rounded" data-bs-toggle="modal" data-bs-target="#conversionModal"
-                                        data-conversion="ipv4-bin" data-from="IPv4 Address" data-to="Binary">
+                                    <a href="#offcanvasModal" class="link-dark rounded" data-bs-toggle="modal" data-modal="Conversion"
+                                        data-conversion="ipv4-bin" data-input="IPv4 Address" data-output="Binary">
                                         IPv4<i class="bi bi-arrow-left-right mx-2"></i>Bin
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="link-dark rounded" data-bs-toggle="modal" data-bs-target="#conversionModal"
-                                        data-conversion="cidr-sm" data-from="CIDR" data-to="Subnet Mask">
+                                    <a href="#offcanvasModal" class="link-dark rounded" data-bs-toggle="modal" data-modal="Conversion"
+                                        data-conversion="cidr-sm" data-input="CIDR" data-output="Subnet Mask">
                                         CIDR<i class="bi bi-arrow-left-right mx-2"></i>SM
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="link-dark rounded" data-bs-toggle="modal" data-bs-target="#conversionModal"
-                                        data-conversion="dec-bin" data-from="Decimal" data-to="Binary">
+                                    <a href="#offcanvasModal" class="link-dark rounded" data-bs-toggle="modal" data-modal="Conversion"
+                                        data-conversion="dec-bin" data-input="Decimal" data-output="Binary">
                                         Dec<i class="bi bi-arrow-left-right mx-2"></i>Bin
                                     </a>
                                 </li>
                             </ul>
                         </div>
                     </li>
-                    <!-- Checker -->
+                    <!-- Validation-->
                     <li class="mb-1">
                         <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
                             data-bs-target="#checker-collapse" aria-expanded="false">
-                            Checker
+                            Validation
                         </button>
                         <div class="collapse" id="checker-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                <li><a href="#" class="link-dark rounded">IPv4 Address</a></li>
-                                <li><a href="#" class="link-dark rounded">Subnet Mask</a></li>
-                                <li><a href="#" class="link-dark rounded">IPv4 Address Type</a></li>          
+                                <li>
+                                    <a href="#offcanvasModal" class="link-dark rounded" data-bs-toggle="modal" data-modal="Validation" data-validation-operation="ipv4" 
+                                        data-input="IPv4 Address">
+                                        IPv4 Address
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#offcanvasModal" class="link-dark rounded" data-bs-toggle="modal" data-modal="Validation" data-validation-operation="sm"
+                                        data-input="Subnet Mask">
+                                        Subnet Mask
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#offcanvasModal" class="link-dark rounded" data-bs-toggle="modal" data-modal="Validation" data-validation-operation="ipv4-type"
+                                        data-input="IPv4 Address" data-output="Type">
+                                        IPv4 Address Type
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </li>
@@ -217,19 +253,18 @@
         </div>
 
         <!-- Modals -->
-        <!-- Conversion Modal -->
-        <div class="modal fade" id="conversionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="conversionModalLabel" aria-hidden="true">
+        <div class="modal fade" id="offcanvasModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="conversionModalLabel">Conversion</h5>
+                        <h5 class="modal-title" id="modalLabel">Title</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" data-modal-alert="true">
                         <form>
                             <div class="mb-3">
-                                <label id="conversion-input-label" for="conversion-input" class="col-form-label">From:</label>
-                                <input type="text" class="form-control" id="conversion-input" placeholder="Input">
+                                <label id="modal-input-label" for="modal-input" class="col-form-label">Input:</label>
+                                <input type="text" id="modal-input" class="form-control" placeholder="Input">
                                 <div class="valid-feedback">
                                     Looks good!
                                 </div> 
@@ -237,24 +272,26 @@
                                     Invalid entry!
                                 </div> 
                             </div>
-                            <p class="text-muted">To</p>
+                            <!-- <p class="text-muted">To</p> -->
+                            <a id="switch-button" class="btn btn-light" role="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
+                                </svg>
+                            </a>
                             <div class="mb-3">
-                                <label  id="conversion-output-label" for="conversion-result" class="col-form-label">To:</label>
-                                <output id="conversion-output" class="d-block border border-1 py-2 px-3 rounded-2 text-muted text-break">Output</output>
-                            </div>
-                            
+                                <label  id="modal-output-label" for="modal-output" class="col-form-label">Output:</label>
+                                <output id="modal-output" class="d-block border border-1 py-2 px-3 rounded-2 text-muted text-break user-select-all">Output</output>
+                            </div>                            
                         </form>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer">                        
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" form="conversionForm" id="modal-button" class="btn btn-primary">Submit</button>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Checker Modal -->
+        </div>     
         
-
     </div>
 
    <!-- Scripts -->

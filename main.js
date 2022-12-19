@@ -17,10 +17,15 @@ const bac = document.getElementById("broadcast-address");
 const caption = document.getElementById("caption");
 const subnetNumberInput = document.getElementById("subnet-number");
 const hostPerSubnet = document.getElementById("host");
-const conversionModal = document.getElementById('conversionModal')
-const conversionInput = conversionModal.querySelector('#conversion-input');
-const conversionOutput = conversionModal.querySelector('#conversion-output');
+const modalElement = document.getElementById('offcanvasModal')
+const modalInputLabel = modalElement.querySelector('#modal-input-label');
+const modalOutputLabel = modalElement.querySelector('#modal-output-label');  
+const modalInput = modalElement.querySelector('#modal-input');
+const modalOutput = modalElement.querySelector('#modal-output');
+const modalTitle = document.querySelector("#modalLabel"); 
+const modalBody = document.querySelector(".modal-body");
 const modalSubmitButton = document.getElementById('modal-button');
+const modalSwitchButton = document.getElementById('switch-button');
 
 // Create Popover.
 const popover = new bootstrap.Popover(subnetNumberInput, {        
@@ -172,7 +177,7 @@ const renderWarningMessage = (error, attachTo=outputSection, preText="Error", al
     alert.style.fontSize = "1rem"
 
     // Create a message for alert element.
-    alert.innerHTML = `<strong>${preText}</strong>! ${error.message}`;
+    alert.innerHTML = `<strong>${preText}</strong>: ${error.message}`;
 
     // Create a close button element for alert element.
     const button = document.createElement("button");
@@ -263,6 +268,271 @@ const getSubnet = function(subnetNumber) {
 }
 
 
+const conversionModal = function (modal, conversionType, inputLabel , outputLabel) {
+    /**
+     * This function takes three arguments of type string.
+     * This function is used in conversion modal.
+     * Returns null.
+     */
+
+    try {
+
+        for (const argument of arguments) {            
+            if (argument === undefined || argument === "" || argument === null) throw new Error("Arguments cannot be empty!");
+            if (typeof argument !== "string") throw new Error("Arguments must be a string!");
+        }
+
+        // Update the modal's content.
+        modalTitle.textContent = modal;
+        modalInputLabel.textContent = inputLabel;
+        modalOutputLabel.textContent = outputLabel;
+    
+        // Display alert message to the user if the operation is decimal to binary.
+        const showAlert = modalBody.getAttribute("data-modal-alert");
+        if (conversionType === "dec-bin" && showAlert === "true") {     
+            const message = new Error("In binary output leading zeros are omitted!");
+            renderWarningMessage(message, modalBody, "Note", "info");
+            // Show alert once only
+            modalBody.setAttribute("data-modal-alert", "false");
+        } else {
+            // Only show the alert html element to dec-bin operation.
+            const firstChild = modalBody.firstElementChild;
+            if (firstChild instanceof HTMLDivElement) {
+                modalBody.removeChild(modalBody.firstElementChild);
+            }            
+        }
+    
+        // Update input's type based on conversion type for users convenience.
+        if (conversionType === "cidr-sm" || conversionType === "dec-bin") {
+            modalInput.setAttribute("type", "number");
+        } 
+        else if (conversionType === "sm-cidr" || conversionType === "bin-dec") {        
+            modalInput.setAttribute("type", "text");
+        }
+        else {
+            // if conversion type is ipv4-bin or vice versa.
+            modalInput.setAttribute("type", "text");
+        }
+    
+        // Reset input and output display text.
+        modalInput.value = "";
+        modalOutput.textContent = "Output";
+    
+        // Make sure that the validation text won't show up when the modal is open with an empty input's value.
+        if (modalInput.value === "") modalInput.classList.remove("is-invalid", "is-valid");
+    
+        // Set extracted data-conversion to Modal's submit button.
+        modalSubmitButton.setAttribute("data-conversion", `${conversionType}`);
+        
+    } catch (error) {
+        console.log(error)
+    }    
+}
+
+const conversionOperation = () => {
+    /**
+     * This method will perform the conversion.
+     * Returns null.
+     */
+
+    try {
+        // Extract info from data-conversion attribute.
+        const conversionType = modalSubmitButton.getAttribute("data-conversion");
+
+        // Perform the conversion.
+        if (conversionType === "ipv4-bin") {            
+            const ipv4 = modalInput.value;
+            const result = Subnet.bin(ipv4);
+
+            if (!result) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");    
+            }            
+
+            modalOutput.textContent = result || "Output";
+
+        } else if (conversionType === "bin-ipv4") {
+            const bin = modalInput.value;
+            const result = Subnet.dec(bin);
+
+            if (!result) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");    
+            }            
+
+            modalOutput.textContent = result || "Output";
+        }
+        else if (conversionType === "cidr-sm") {
+            const CIDR = parseInt(modalInput.value);
+            const result = Subnet.subnetMask(CIDR);
+
+            if (!result) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");    
+            }
+
+            modalOutput.textContent = result || "Output";
+
+        } else if (conversionType === "sm-cidr") {
+            const SubnetMask = modalInput.value;
+            const result = Subnet.CIDR(SubnetMask);
+
+            if (!result) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");    
+            }
+
+            modalOutput.textContent = result || "Output";
+        }
+        else if (conversionType === "dec-bin") {
+            const decimal = parseInt(modalInput.value);
+            const result = Subnet.decToBin(decimal);
+
+            if (!result) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");    
+            }
+
+            modalOutput.textContent = result || "Output";
+
+        } else {
+            const bin = modalInput.value;
+            const result = Subnet.binToDec(bin); 
+
+            if (result instanceof Error) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");    
+            }
+
+            modalOutput.textContent = result;
+        }
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const validationModal = function (modal, inputLabel, outputLabel, validationOperation) {
+    /**
+     * This function takes arguments of type string.
+     * This function is used in validation modal.
+     * Returns null.
+     */
+
+    try {
+
+        for (const argument of arguments) {            
+            if (argument === undefined || argument === "" || argument === null) throw new Error("Arguments cannot be empty!");
+            if (typeof argument !== "string") throw new Error("Arguments must be a string!");
+        }
+
+        // Update the modal's content.
+        modalTitle.textContent = modal;
+        modalInputLabel.textContent = inputLabel;
+        modalOutputLabel.textContent = outputLabel;
+
+        // Reset input and output display text.
+        modalInput.value = "";
+        modalOutput.textContent = "Output";
+
+        // Update input's type
+        modalInput.setAttribute("type", "text");
+
+        // Make sure that the validation text won't show up when the modal is open with an empty input's value.
+        if (modalInput.value === "") modalInput.classList.remove("is-invalid", "is-valid");
+        
+        // Set the type of validation operation.    
+        modalSubmitButton.setAttribute("data-validation-operation", `${validationOperation}`);  
+
+    } catch (error) {
+        console.log(error);
+    }         
+}
+
+const validationOperation = () => {
+    /**
+     * This function will perform the validation operation.
+     * Returns null
+     */
+
+    try {
+        // Extract info from data-validation-operation attribute.
+        const operationType = modalSubmitButton.getAttribute("data-validation-operation");
+
+        if (operationType === "ipv4") {
+            const ipv4 = modalInput.value;
+            const result = Subnet.checkFormat(ipv4);
+
+            if (result === false) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");
+                
+                modalOutput.textContent = "Invalid Format";
+                
+                return;
+            }            
+
+            modalOutput.textContent = "Valid Format";
+        }
+        else if (operationType === "sm") {
+            const subnetMask = modalInput.value;
+            const result = Subnet.checkSM(subnetMask);
+
+            if (result === false) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");
+                
+                modalOutput.textContent = "Invalid format";
+                
+                return;
+            }            
+
+            modalOutput.textContent = "Valid format";
+        }
+        else {
+            // If operation is IPv4 Address type.
+            const ipv4 = modalInput.value;
+            const result = Subnet.ipv4Type(ipv4);
+
+            if (result instanceof Error)  {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");
+                
+                modalOutput.textContent = "Unknown Address";
+
+                return;                
+            }            
+
+            modalOutput.textContent = result;
+        }
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 // Event listeners.
 const forms = document.querySelectorAll('form');
 Array.from(forms).forEach(form => {
@@ -274,6 +544,7 @@ Array.from(forms).forEach(form => {
                 
     })
 })
+
 
 const formInputs = document.querySelectorAll("input[class='form-control']");
 Array.from(formInputs).forEach(input => {    
@@ -293,6 +564,7 @@ Array.from(formInputs).forEach(input => {
     })
 })
 
+
 submitButton.addEventListener("click", () => {
     
     // Make sure first that the subnet number always starts with 0.
@@ -305,10 +577,12 @@ submitButton.addEventListener("click", () => {
     getSubnet(0)
 });
 
+
 subnetNumberInput.addEventListener("focus", () => {
     console.log("Popover hide")
     popover.hide()
 });
+
 
 subnetNumberInput.addEventListener("change", () => {
 
@@ -318,103 +592,89 @@ subnetNumberInput.addEventListener("change", () => {
 
 });
 
-conversionModal.addEventListener('show.bs.modal', event => {
+
+modalElement.addEventListener('show.bs.modal', event => {
     // Link that triggered the modal
     const link = event.relatedTarget
 
-    // Extract info from data-* attributes
-    // Then set it to Modal's submit button to be used to perform conversion.
-    const conversionType = link.getAttribute('data-conversion');
-    const from = link.getAttribute('data-from');
-    const to = link.getAttribute('data-to');
+    // Extract info from data-* attributes.
+    const modal = link.getAttribute('data-modal');
+    const input = link.getAttribute('data-input') || "Input";
+    const output = link.getAttribute('data-output') || "Output";
+    
+    // Check what modal to use for.    
+    if (modal === "Conversion") {
+        // Get the conversion type.
+        const conversionType = link.getAttribute('data-conversion');
+        
+        // Show the switch button.
+        modalSwitchButton.classList.remove("visually-hidden");
+        
+        // Update Modal.
+        conversionModal(modal, conversionType, input, output);
+        
+        // For the switch button, reverse the data attributes.
+        modalSwitchButton.setAttribute("data-modal", `${modal}`)
+        const conversionTypeArray = conversionType.split("-")
+        modalSwitchButton.setAttribute("data-conversion", `${conversionTypeArray[1]}-${conversionTypeArray[0]}`);
+        modalSwitchButton.setAttribute("data-input", `${output}`);
+        modalSwitchButton.setAttribute("data-output", `${input}`);
+        
+        // Set the operation to perform for the submit's button.
+        modalSubmitButton.setAttribute("data-modal", "conversion");
+    }
+    else {
+        // If modal is for validation.
+        const validationOperation = link.getAttribute("data-validation-operation");
 
-    // Set extracted data to Modal's submit button.
-    modalSubmitButton.setAttribute("data-conversion", `${conversionType}`);
+        // Hide the switch button.
+        modalSwitchButton.classList.add("visually-hidden");
 
-    // Update the modal's content.
-    const conversionInputLabel = conversionModal.querySelector('#conversion-input-label');
-    const conversionOutputLabel = conversionModal.querySelector('#conversion-output-label');    
-    const modalBody = document.querySelector(".modal-body");
-
-    conversionInputLabel.textContent = from;
-    conversionOutputLabel.textContent = to;
-
-    // Display message to the user if the operation is decimal to binary.    
-    if (conversionType === "dec-bin") {        
-        const message = new Error("In the output leading zeros are omitted!");
-        renderWarningMessage(message, modalBody, "Note", "info");
-    } else {
-        // Only show the alert html element to dec-bin operation.
+        // Make sure the alert message does not show up when not closed in validation modal.
         const firstChild = modalBody.firstElementChild;
         if (firstChild instanceof HTMLDivElement) {
-            modalBody.removeChild(modalBody.firstElementChild);            
-        }
+            modalBody.removeChild(modalBody.firstElementChild);
+        } 
+
+        // Update Modal.
+        validationModal(modal, input, output, validationOperation);
+
+        // Set the operation to perform for the submit's button.
+        modalSubmitButton.setAttribute("data-modal", "validation");
     }
-
-    // Update input's type based on conversion type for users convenience.
-    if (conversionType === "cidr-sm" || conversionType === "dec-bin") {
-        conversionInput.setAttribute("type", "number");
-    } else {
-        // if conversion type is ipv4-bin.
-        conversionInput.setAttribute("type", "text");
-    }
-
-    // Reset input and output display text.
-    conversionInput.value = "";
-    conversionOutput.textContent = "Output";
-
-    // Make sure that the validation text won't show up when the modal is open with an empty input's value.
-    if (conversionInput.value === "") conversionInput.classList.remove("is-invalid", "is-valid");
-    
-    console.log(conversionType);    
+        
 })
+
+
+modalSwitchButton.addEventListener("click", () => {
+
+    // Extract info from data-* attributes.
+    const modal = modalSwitchButton.getAttribute("data-modal")
+    const conversionType = modalSwitchButton.getAttribute("data-conversion");
+    const input = modalSwitchButton.getAttribute('data-input');
+    const output = modalSwitchButton.getAttribute('data-output');
+
+    conversionModal(modal, conversionType, input, output);
+
+    // Reverse the data attributes to perform the opposite converison.
+    const conversionTypeArray = conversionType.split("-")
+    modalSwitchButton.setAttribute("data-conversion", `${conversionTypeArray[1]}-${conversionTypeArray[0]}`);
+    modalSwitchButton.setAttribute("data-input", `${output}`);
+    modalSwitchButton.setAttribute("data-output", `${input}`);
+})
+
 
 // Add event handler to Modal's submit button.
 modalSubmitButton.addEventListener("click", () => {
 
-    // Extract info from data-conversion attribute.
-    const conversionType = modalSubmitButton.getAttribute("data-conversion");
-    console.log(conversionType);
+    // Check what operation to perform.
+    const operation = modalSubmitButton.getAttribute("data-modal");
 
-    // Perform the conversion.
-    if (conversionType === "ipv4-bin") {            
-        const ipv4 = conversionInput.value;
-        const result = Subnet.bin(ipv4);
-
-        if (!result) {
-            // Remove first the .is-valid if it's exists.
-            conversionInput.classList.remove("is-valid");
-            // Then add .is-invalid.
-            conversionInput.classList.add("is-invalid");    
-        }            
-
-        conversionOutput.textContent = result || "Output";
-    } 
-    else if (conversionType === "cidr-sm") {
-        const CIDR = parseInt(conversionInput.value);
-        const result = Subnet.subnetMask(CIDR);
-
-        if (!result) {
-            // Remove first the .is-valid if it's exists.
-            conversionInput.classList.remove("is-valid");
-            // Then add .is-invalid.
-            conversionInput.classList.add("is-invalid");    
-        }
-
-        conversionOutput.textContent = result || "Output";
-    } 
-    else {
-        const decimal = parseInt(conversionInput.value);
-        const result = Subnet.decToBin(decimal);
-
-        if (!result) {
-            // Remove first the .is-valid if it's exists.
-            conversionInput.classList.remove("is-valid");
-            // Then add .is-invalid.
-            conversionInput.classList.add("is-invalid");    
-        }
-
-        conversionOutput.textContent = result || "Output";
+    if (operation === "conversion") {
+        conversionOperation();
     }
-
-})    
+    else {
+        // If operation is validation.
+        validationOperation();
+    }    
+})
