@@ -158,24 +158,17 @@
         <footer class="container-fluid text-white bg-dark">
             <div class="container">
                 <div class="row">
-                    <div class="col-sm">
-                        <p class="mb-0 d-inline-block">If you like this app you can buy me a coffee
-                            <a href="https://paypal.me/kmfiguerrez" target="_blank" rel="noopener noreferrer">
-                                <i class="bi bi-cup-hot"></i> </p>
-                            </a>                                                    
-                    </div>
-                    <div class="col-sm">
-                        <figure class="text-center">
-                            <blockquote class="blockquote">
-                                <p class="small d-inline-block">&copy IPv4 Subnetting 2022 | All Rights Reserved.</p>
-                            </blockquote>
-                            <figcaption class="blockquote-footer">
-                                <a href="https://www.linkedin.com/in/kmfiguerrez/" class="text-reset text-decoration-none" target="_blank">
-                                    Karl Michael Figuerrez
-                                </a>                             
-                                <!-- Karl Michael Figuerrez -->
-                            </figcaption>
-                        </figure>
+                    <div class="col mx-auto">
+                        <nav class="navbar navbar-dark bg-transparent">
+                            <div class="container">
+                                <div class="navbar-nav flex-row mx-auto ">
+                                    <a class="nav-link mx-1" href="#">Home</a>
+                                    <a class="nav-link mx-1" href="https://www.linkedin.com/in/kmfiguerrez/" target="_blank">Contact</a>
+                                    <a class="nav-link mx-1" href="https://paypal.me/kmfiguerrez" target="_blank">Donate</a>
+                                </div>
+                            </div>
+                        </nav>
+                        <p class="small text-center ">&copy IPv4 Subnetting 2022 | All Rights Reserved.</p>
                     </div>
                 </div>
                 
@@ -284,7 +277,8 @@
                             </div>                            
                         </form>
                     </div>
-                    <div class="modal-footer">                        
+                    <div class="modal-footer">
+                        <a href="https://en.wikipedia.org/wiki/Reserved_IP_addresses" id="modalSourceLink" class="text-decoration-none d-inline-block me-auto link-info" target="_blank">source</a>                       
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" form="conversionForm" id="modal-button" class="btn btn-primary">Submit</button>
                     </div>

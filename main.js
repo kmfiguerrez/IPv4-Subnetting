@@ -26,6 +26,7 @@ const modalTitle = document.querySelector("#modalLabel");
 const modalBody = document.querySelector(".modal-body");
 const modalSubmitButton = document.getElementById('modal-button');
 const modalSwitchButton = document.getElementById('switch-button');
+const modalRefAnchor = document.getElementById('modalSourceLink');
 
 // Create Popover.
 const popover = new bootstrap.Popover(subnetNumberInput, {        
@@ -383,14 +384,18 @@ const conversionOperation = () => {
             const SubnetMask = modalInput.value;
             const result = Subnet.CIDR(SubnetMask);
 
-            if (!result) {
+            if (result !== 0 && !result) {
                 // Remove first the .is-valid if it's exists.
                 modalInput.classList.remove("is-valid");
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");    
             }
 
-            modalOutput.textContent = result || "Output";
+            if (result === 0) {
+                modalOutput.textContent = result;
+            } else {
+                modalOutput.textContent = result || "Output";
+            }            
         }
         else if (conversionType === "dec-bin") {
             const decimal = parseInt(modalInput.value);
@@ -604,11 +609,14 @@ modalElement.addEventListener('show.bs.modal', event => {
     
     // Check what modal to use for.    
     if (modal === "Conversion") {
-        // Get the conversion type.
+        // Extract the conversion type.
         const conversionType = link.getAttribute('data-conversion');
         
         // Show the switch button.
         modalSwitchButton.classList.remove("visually-hidden");
+
+        // Hide the reference link for address type.
+        modalRefAnchor.classList.add("visually-hidden");
         
         // Update Modal.
         conversionModal(modal, conversionType, input, output);
@@ -625,10 +633,20 @@ modalElement.addEventListener('show.bs.modal', event => {
     }
     else {
         // If modal is for validation.
+
+        // Extract the validation operation.
         const validationOperation = link.getAttribute("data-validation-operation");
 
         // Hide the switch button.
         modalSwitchButton.classList.add("visually-hidden");
+
+        // Show the reference link for address type.
+        if (validationOperation === "ipv4-type") {
+            modalRefAnchor.classList.remove("visually-hidden");    
+        } else {
+            modalRefAnchor.classList.add("visually-hidden");
+        }
+        
 
         // Make sure the alert message does not show up when not closed in validation modal.
         const firstChild = modalBody.firstElementChild;

@@ -158,6 +158,7 @@ class Subnet {
         // Otherwise the Subnet Mask is valid.
         return true
     }
+
     static binToDec(bin) {
         /**
          * This method converts binaries to decimal.
@@ -185,6 +186,7 @@ class Subnet {
             console.log(error);
         }
     }
+    
     static decToBin(decimal, numOfDigits=0) {
         /**
          * This method takes two parameters.
