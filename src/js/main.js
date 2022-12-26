@@ -418,7 +418,10 @@ const conversionOperation = () => {
                 // Remove first the .is-valid if it's exists.
                 modalInput.classList.remove("is-valid");
                 // Then add .is-invalid.
-                modalInput.classList.add("is-invalid");    
+                modalInput.classList.add("is-invalid");
+
+                modalOutput.textContent = "Output";
+                return;
             }
 
             modalOutput.textContent = result;

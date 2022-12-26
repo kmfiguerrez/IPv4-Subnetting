@@ -2,16 +2,17 @@
   "name": "ipv4-subnetting",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "private": true,
   "scripts": {
-    "compile:sass": "sass --watch scss:css"
+    "compile:sass": "sass src/scss:src/css",
+    "postcss": "postcss src/css/style.css -d public"    
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kmfiguerrez/IPv4-Subnetting.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Karl Michael Figuerrez",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/kmfiguerrez/IPv4-Subnetting/issues"
@@ -21,6 +22,10 @@
     "bootstrap": "^5.2.3"
   },
   "devDependencies": {
+    "@fullhuman/postcss-purgecss": "^5.0.0",
+    "cssnano": "^5.1.14",
+    "postcss": "^8.4.20",
+    "postcss-cli": "^10.1.0",
     "sass": "^1.56.2"
   }
 }
