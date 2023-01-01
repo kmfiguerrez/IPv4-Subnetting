@@ -13,7 +13,7 @@ your learning or practicing IPv4 Subnetting. Anyone can use this app for free.
 - Vanilla Javascript
 
 ## How to use this app
-1. Open the app using a web browser (chrome is preffered).
+1. Open the [app](https://ipv4subnetting.netlify.app/) using a web browser (chrome is preffered).
 2. Input the required IP information.
 
 ## License
