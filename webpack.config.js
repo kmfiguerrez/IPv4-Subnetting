@@ -2,6 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
+    mode: "production",
     entry: path.resolve(__dirname, "src/js/main.js"),
     output: {
         path: path.resolve(__dirname, "dist"),
@@ -9,9 +10,9 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            title: "Webpack App",
+            title: "IPv4 Subnetting",
             filename: "index.html",
-            template: "src/index.html"
+            template: "src/template.html"
         })
     ]
 

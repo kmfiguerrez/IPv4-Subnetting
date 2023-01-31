@@ -1,9 +1,7 @@
 # IPv4 Subnetting
 Subnetting is a process of dividing a network into smaller networks known as subnets.
 
-## Description
-This Repository is one of my project called IPv4 Subnetting is a web app that can be used whenever
-your learning or practicing IPv4 Subnetting. Anyone can use this app for free.
+This Repository is one of my project called IPv4 Subnetting is a web app that can be used whenever your learning or practicing IPv4 Subnetting. Anyone can use this app for free.
 
 ## Tech used
 - HTML

@@ -595,8 +595,8 @@ class Subnet {
     static getSubnets(ipv4Input, smInput, subnetBitsInput, subnetToFInd) {
         /**
          * This method takes a parameters of type string.
-         * This method lists the subnet object(s). 
-         * Returns an array.        
+         * This method lists the subnet object(s).
+         * Returns an object.     
          */
 
         try {
@@ -687,4 +687,4 @@ class Subnet {
     }
 }
 
-export { Subnet };
+export default Subnet ;

@@ -1,4 +1,4 @@
-import { Subnet } from "./ip.js";
+import Subnet from "./ipv4.js";
 
 const ipv4Input = document.querySelector("#ipv4");
 const smInput = document.querySelector("#subnet-mask");
@@ -38,6 +38,12 @@ const popover = new bootstrap.Popover(subnetNumberInput, {
 
 // Popover should only be shown once.
 let popMessage = false;
+
+// Create tooltips
+const tooltipList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+Array.from(tooltipList).map(elem => {
+    return new bootstrap.Tooltip(elem);
+})
 
 // Model
 // Current subnet to be displayed.
@@ -554,7 +560,7 @@ Array.from(forms).forEach(form => {
 })
 
 
-const formInputs = document.querySelectorAll("input[class='form-control']");
+const formInputs = document.querySelectorAll("input[class='form-control bg-transparent']");
 Array.from(formInputs).forEach(input => {    
 
     // Add event handlers to each form input.
