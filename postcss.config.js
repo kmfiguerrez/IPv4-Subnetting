@@ -5,7 +5,7 @@ module.exports = {
       purgecss({
         content: ['./src/template.html'],
         safelist: {
-          standard: [/offcanvas/, /modal/, /alert/, /popover/, /valid/, /collapsing/],
+          standard: [/offcanvas/, /modal/, /alert/, /popover/, /valid/, /collapsing/, /border-success/],
           deep: [/offcanvas/, /modal/, /popover/],          
         }
       }),

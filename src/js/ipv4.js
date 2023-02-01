@@ -87,7 +87,7 @@ class Subnet {
         // }
         // Check each octet range.
         for (const elem of IPv4InArray) {
-            if (elem < 0 || elem > 255) {
+            if (parseInt(elem) < 0 || parseInt(elem) > 255) {
                 console.log("Invalid IPv4 address!");
                 return false;
             }
@@ -167,12 +167,12 @@ class Subnet {
          */
         try {
             // Check input first.
-            if(bin === undefined || bin === null || bin === "") return new Error("Argument cannot be empty!");
-            if(typeof bin !== 'string') return new Error("Argument must be a string!");
+            if(bin === undefined || bin === null || bin === "") throw new Error("Input cannot be empty!");
+            if(typeof bin !== 'string') throw new Error("Argument must be a string!");
             for (const char of bin) {
                 const validChar = ["1", "0"];
                 if (!validChar.includes(char)) {
-                    return new Error("Invalid format!");
+                    throw new Error("Invalid Binary Character(s)!");
                 }
             }
             
@@ -184,6 +184,7 @@ class Subnet {
 
         } catch (error) {
             console.log(error);
+            return new Error(error.message);
         }
     }
     
@@ -198,7 +199,7 @@ class Subnet {
 
         try {
             if(decimal === undefined) throw new Error("Did not pass in an argument!");
-            if(decimal === "") throw new Error("Argument cannot be empty!"); 
+            if(decimal === "") throw new Error("Input cannot be empty!"); 
             if(isNaN(decimal) || isNaN(decimal) || typeof decimal !== "number" || typeof numOfDigits !== "number") throw new Error("Arguments must be of number!");
 
 
@@ -222,6 +223,7 @@ class Subnet {
                         
         } catch (error) {
             console.log(error);
+            return new Error(error.message);
         }        
     }
 
@@ -236,9 +238,9 @@ class Subnet {
 
         try {
             if(ipv4 === undefined) throw new Error("Did not pass in an argument!");
-            if(ipv4 === "") throw new Error("Argument cannot be empty!");
+            if(ipv4 === "") throw new Error("Input cannot be empty!");
             if(typeof ipv4 !== "string") throw new Error("Argument must be a string!");
-            if(!ipv4.includes(".")) throw new Error("IPv4 must written in a dot notation!");
+            if(!this.checkFormat(ipv4)) throw new Error("Invalid IPv4 Address!");
 
             const ipv4InArray = ipv4.split(".");
             let ipv4AsBin = [];
@@ -255,6 +257,7 @@ class Subnet {
             
         } catch (error) {
             console.log(error);
+            return new Error(error.message);
         }        
     }
 
@@ -269,12 +272,12 @@ class Subnet {
          */
 
         try {            
-            if(ipv4 === "" || ipv4 === undefined || ipv4 === null) throw new Error("Argument cannot be empty!");
+            if(ipv4 === "" || ipv4 === undefined || ipv4 === null) throw new Error("Input cannot be empty!");
             if(typeof ipv4 !== "string") throw new Error("Argument must be a string!");
             for (const char of ipv4) {
                 const validChar = ["1", "0", "."];
                 if (!validChar.includes(char)) {
-                    throw new Error("Invalid format!");
+                    throw new Error("Invalid Binary Character(s)!");
                 }
             }
             
@@ -306,10 +309,11 @@ class Subnet {
             
         } catch (error) {
             console.log(error);
+            return new Error(error.message);
         }
     }
 
-    static ipv4ToDec = (ipv4AddressInput) => {
+    static ipv4ToDec(ipv4AddressInput) {
         /**
          * This method converts ipv4 address to decimal.
          * This method takes an argument of type string.
@@ -334,7 +338,7 @@ class Subnet {
         }
     }
 
-    static ipv4Type = (ipv4AddressInput) => {
+    static ipv4Type(ipv4AddressInput) {
         /**
          * This method determines the type of IPv4 Address.
          * This method takes an argument of type string.
@@ -342,9 +346,9 @@ class Subnet {
          */
     
         try {
-            if (typeof ipv4AddressInput !== "string") return new Error("Argument must a string!");
-            if (ipv4AddressInput === "" || ipv4AddressInput === undefined || ipv4AddressInput === null) return new Error("Argument cannot be empty!");
-            if (!this.checkFormat(ipv4AddressInput)) return new Error("Invalid ipv4 format!");
+            if (typeof ipv4AddressInput !== "string") throw new Error("Argument must a string!");
+            if (ipv4AddressInput === "" || ipv4AddressInput === undefined || ipv4AddressInput === null) throw new Error("Input cannot be empty!");
+            if (!this.checkFormat(ipv4AddressInput)) throw new Error("Invalid ipv4 format!");
 
             const ipv4 = {
                 software: ["0.0.0.0", "0.255.255.255"],
@@ -515,11 +519,11 @@ class Subnet {
                 }
             }
             
-            // Otherwise.
-            return null;
-    
+            // Otherwise not on the list.
+            return "Reserved"
         } catch (error) {
             console.log(error);
+            return new Error(error.message);
         }
     }
 
@@ -533,9 +537,9 @@ class Subnet {
 
         try {
             if(subnetMask === undefined) throw new Error("Did not pass in an argument!");
-            if(subnetMask === "") throw new Error("Argument cannot be empty!");
+            if(subnetMask === "") throw new Error("Input cannot be empty!");
             if(typeof subnetMask !== "string") throw new Error("Argument must be a string!");
-            if(this.checkSM(subnetMask)  === false) throw new Error("Invalid Subnet Mask!");
+            if(!this.checkSM(subnetMask)) throw new Error("Invalid Subnet Mask!");
             
             let cidr = 0;
             // Convert the Subnet Mask to a string of continuous binaries.
@@ -553,6 +557,7 @@ class Subnet {
 
         } catch (error) {
             console.log(error);
+            return new Error(error.message);
         }
     }
 
@@ -565,8 +570,8 @@ class Subnet {
 
         try {
             if(cidr === undefined) throw new Error("Did not pass in an argument!");
-            if(cidr === "") throw new Error("Argument cannot be empty!");
-            if(isNaN(cidr) || typeof cidr !== "number") throw new Error("Argument must be a number!");
+            if(cidr === "") throw new Error("Input cannot be empty!");
+            if(isNaN(cidr) || typeof cidr !== "number") throw new Error("Argument must be an integer!");
             if(cidr < 0 || cidr > 32) throw new Error("CIDR is out of range!");
 
             let subnetMask = "";
@@ -589,6 +594,7 @@ class Subnet {
 
         } catch (error) {
             console.log(error);
+            return new Error(error.message);
         }
     }
 
@@ -602,7 +608,7 @@ class Subnet {
         try {
             // Check first the ipv4 and subnet mask inputs.
             if(ipv4Input === undefined || smInput === undefined || subnetBitsInput === undefined) throw new Error("Arguments cannot be undefined!");
-            if(ipv4Input === "" || smInput === "") throw new Error("Arguments cannot be empty!");
+            if(ipv4Input === "" || smInput === "") throw new Error("Input cannot be empty!");
             if(typeof ipv4Input !== "string" || typeof smInput !== "string") throw new Error("Arguments must be a string!");
             if(typeof subnetBitsInput !== "number") throw new Error("Third argument must a number!");
             if(Subnet.checkFormat(ipv4Input) === false) throw new Error("Invalid IPv4 Address!");
@@ -683,6 +689,7 @@ class Subnet {
 
         } catch (error) {
             console.log(error);
+            return new Error(error.message);
         }
     }
 }

@@ -14,7 +14,7 @@ const fuac = document.getElementById("first-usable-address");
 const luac = document.getElementById("last-usable-address");
 // bac means Broadcast Address Container.
 const bac = document.getElementById("broadcast-address");
-const caption = document.getElementById("caption");
+const outputHeader = document.getElementById("caption");
 const subnetNumberInput = document.getElementById("subnet-number");
 const hostPerSubnet = document.getElementById("host");
 const modalElement = document.getElementById('offcanvasModal')
@@ -22,7 +22,8 @@ const modalInputLabel = modalElement.querySelector('#modal-input-label');
 const modalOutputLabel = modalElement.querySelector('#modal-output-label');  
 const modalInput = modalElement.querySelector('#modal-input');
 const modalOutput = modalElement.querySelector('#modal-output');
-const modalTitle = document.querySelector("#modalLabel"); 
+const modalElemTitle = document.querySelector("#modalLabel");
+const modalSubtitle = document.querySelector("#modalSubtitle");
 const modalBody = document.querySelector(".modal-body");
 const modalSubmitButton = document.getElementById('modal-button');
 const modalSwitchButton = document.getElementById('switch-button');
@@ -45,28 +46,8 @@ Array.from(tooltipList).map(elem => {
     return new bootstrap.Tooltip(elem);
 })
 
+
 // Model
-// Current subnet to be displayed.
-let currentSubnet = {};
-
-// Set the current subnet constiable.
-const setCurrentSubnet = function(inputCurrentSubnet) {
-    /**
-     * This method takes a parameter of type object.
-     * This method will set the values of the subnets constiable
-     * in the model section.
-     */
-     
-    try {
-        if(inputCurrentSubnet === undefined || inputCurrentSubnet === "") throw new Error("Argument cannot be undefined nor empty!");        
-        
-        currentSubnet = inputCurrentSubnet;        
-
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 
 const formatNumber = (num) => {
     /**
@@ -128,6 +109,8 @@ const checkUserInputs = () => {
         // Set error message.
         errorMessage = "Incorrect IPv4 Address!";
         numOfError++;
+        // Reset Output Content.
+        resetOuputContent();
     }
 
     // Second check the subnet mask.
@@ -139,6 +122,8 @@ const checkUserInputs = () => {
         // Set error message.
         errorMessage = "Incorrect Subnet Mask!";
         numOfError++;
+        // Reset Output Content.
+        resetOuputContent();
     }
     
     // Third check the subnet bits entry.
@@ -150,6 +135,8 @@ const checkUserInputs = () => {
         // Set error message.
         errorMessage = "Incorrect Subnet Bits!";
         numOfError++;
+        // Reset Output Content.
+        resetOuputContent();
     } 
 
     // Fourth check the subnet number input.    
@@ -159,7 +146,7 @@ const checkUserInputs = () => {
     } 
 
     if (numOfError > 1) {
-        return new Error("Incorrect IP Information!");
+        return new Error("Incorrect IP Informations!");
     } else if (numOfError === 1) {
         return new Error(errorMessage);
     } else {
@@ -169,7 +156,29 @@ const checkUserInputs = () => {
 
 
 // View.
-const renderWarningMessage = (error, attachTo=outputSection, preText="Error", alertType="danger") => {
+function resetOuputContent () {
+    /**
+     * This method will reset the content of the output section
+     * in the main screen.
+     * Returns void.
+     */
+
+    // Reset text.
+    outputHeader.innerText = "OUTPUT";
+    subnetNumberInput.value = "";
+    hostPerSubnet.innerText = "";
+    nac.innerText = "X.X.X.X";
+    fuac.innerText = "X.X.X.X";
+    luac.innerText = "X.X.X.X";
+    bac.innerText = "X.X.X.X";
+    nac.nextElementSibling.innerText = "/X";
+    fuac.nextElementSibling.innerText = "/X";
+    luac.nextElementSibling.innerText = "/X";
+    bac.nextElementSibling.innerText = "/X";
+    
+}
+
+const renderAlertMessage = (error, attachTo, preText="Error", alertType="danger") => {
     /**
      * This method displays error to the user using bootstrap alert component.
      * This method takes an error object and two optional arguments.
@@ -200,14 +209,13 @@ const renderWarningMessage = (error, attachTo=outputSection, preText="Error", al
 }
 
 
-const render = function() {
+const render = function(subnet) {
     /**
-     * This method will render whatever is in the current subnet constiable
-     * in the model section.
+     * This method will render the Network Address, First Usable Address.
+     * Last Usable Address, Broadcast Address and the number of hosts per subnet.
      * Returns null.
      */
-
-    const subnet = currentSubnet; 
+    
     const networkAddress = subnet.networkAddress;
     const firstUsableAddress = subnet.firstUsableAddress;
     const lastUsableAddress = subnet.lastUsableAddress;
@@ -224,9 +232,9 @@ const render = function() {
     
     // Display.
     if (numOfSubnets === 1) {
-        caption.innerHTML = `There is ${numOfSubnets} subnet`;    
+        outputHeader.innerHTML = `There is ${numOfSubnets} subnet`;    
     } else {
-        caption.innerHTML = `There are ${formatNumber(numOfSubnets)} subnets`;
+        outputHeader.innerHTML = `There are ${formatNumber(numOfSubnets)} subnets`;
     }
     
     nac.innerHTML = networkAddress;
@@ -251,8 +259,33 @@ const render = function() {
     }        
 }
 
+const resetModalContent = () => {
+    /**
+     * This function will reset modal's content.
+     * Returns void.
+     */
+
+    // Reset I/O text.
+    modalInput.value = "";
+    modalOutput.innerText = "Output";
+
+    // Reset validation text.
+    modalInput.classList.remove("is-valid", "is-invalid");
+    modalOutput.classList.remove("is-valid", "border-success");
+
+    // Remove any alert message.
+    const firstChild = modalBody.firstChild;
+    if (firstChild instanceof HTMLDivElement) {
+        modalBody.removeChild(firstChild);
+    }
+}
+
+
 // Controller.
 const getSubnet = function(subnetNumber) {
+    /**
+     * This function will get a particular subnet and pass it to render function.
+     */
         
     const ipv4 = ipv4Input.value;
     const subnetMask = smInput.value;
@@ -263,286 +296,286 @@ const getSubnet = function(subnetNumber) {
     const result = checkUserInputs() 
     if (result !== true) {
         // Display error to the user.
-        renderWarningMessage(result);
+        renderAlertMessage(result, outputSection);
         return;
     } 
     
-    // Set the current subnet which to be display by the render function.        
-    setCurrentSubnet(subnet);
-    
     // Display the subnet.
-    render();
+    render(subnet);
 }
 
 
-const conversionModal = function (modal, conversionType, inputLabel , outputLabel) {
+const updateModalContent = (modalTitle, subtitle, modalInputLabelText, modalOutputLabelText, modalOperation, showAnchorLink) => {
     /**
-     * This function takes three arguments of type string.
-     * This function is used in conversion modal.
-     * Returns null.
-     */
+     * This function will update modal's content
+     * Returns void.
+     */    
 
-    try {
+    // Reset the content first.
+    resetModalContent();
 
-        for (const argument of arguments) {            
-            if (argument === undefined || argument === "" || argument === null) throw new Error("Arguments cannot be empty!");
-            if (typeof argument !== "string") throw new Error("Arguments must be a string!");
-        }
+    // Update the text.
+    modalElemTitle.innerText = modalTitle;    
+    modalSubtitle.innerText = subtitle.replace(/<.*>/i, "-"); // Regular Expression.
+    modalInputLabel.innerText = modalInputLabelText;
+    modalOutputLabel.innerText = modalOutputLabelText;
 
-        // Update the modal's content.
-        modalTitle.textContent = modal;
-        modalInputLabel.textContent = inputLabel;
-        modalOutputLabel.textContent = outputLabel;
+    // Set the form's input type for users convenience.
+    if (modalOperation === "cidr-sm" || modalOperation === "dec-bin") {
+        modalInput.setAttribute("type", "number");
+    } else {
+        modalInput.setAttribute("type", "text");
+    }
+
+    // Update the switch button.
+    switch (modalTitle) {
+        case "Conversion":
+            // Show the switch button.
+            modalSwitchButton.classList.remove("visually-hidden");
+            break;
     
-        // Display alert message to the user if the operation is decimal to binary.
-        const showAlert = modalBody.getAttribute("data-modal-alert");
-        if (conversionType === "dec-bin" && showAlert === "true") {     
-            const message = new Error("In binary output leading zeros are omitted!");
-            renderWarningMessage(message, modalBody, "Note", "info");
-            // Show alert once only
-            modalBody.setAttribute("data-modal-alert", "false");
-        } else {
-            // Only show the alert html element to dec-bin operation.
-            const firstChild = modalBody.firstElementChild;
-            if (firstChild instanceof HTMLDivElement) {
-                modalBody.removeChild(modalBody.firstElementChild);
-            }            
-        }
-    
-        // Update input's type based on conversion type for users convenience.
-        if (conversionType === "cidr-sm" || conversionType === "dec-bin") {
-            modalInput.setAttribute("type", "number");
-        } 
-        else if (conversionType === "sm-cidr" || conversionType === "bin-dec") {        
-            modalInput.setAttribute("type", "text");
-        }
-        else {
-            // if conversion type is ipv4-bin or vice versa.
-            modalInput.setAttribute("type", "text");
-        }
-    
-        // Reset input and output display text.
-        modalInput.value = "";
-        modalOutput.textContent = "Output";
-    
-        // Make sure that the validation text won't show up when the modal is open with an empty input's value.
-        if (modalInput.value === "") modalInput.classList.remove("is-invalid", "is-valid");
-    
-        // Set extracted data-conversion to Modal's submit button.
-        modalSubmitButton.setAttribute("data-conversion", `${conversionType}`);
-        
-    } catch (error) {
-        console.log(error)
-    }    
-}
+        default:
+            // Otherwise hide the switch button.
+            modalSwitchButton.classList.add("visually-hidden")
+            break;
+    }
 
-const conversionOperation = () => {
-    /**
-     * This method will perform the conversion.
-     * Returns null.
-     */
-
-    try {
-        // Extract info from data-conversion attribute.
-        const conversionType = modalSubmitButton.getAttribute("data-conversion");
-
-        // Perform the conversion.
-        if (conversionType === "ipv4-bin") {            
-            const ipv4 = modalInput.value;
-            const result = Subnet.bin(ipv4);
-
-            if (!result) {
-                // Remove first the .is-valid if it's exists.
-                modalInput.classList.remove("is-valid");
-                // Then add .is-invalid.
-                modalInput.classList.add("is-invalid");    
-            }            
-
-            modalOutput.textContent = result || "Output";
-
-        } else if (conversionType === "bin-ipv4") {
-            const bin = modalInput.value;
-            const result = Subnet.dec(bin);
-
-            if (!result) {
-                // Remove first the .is-valid if it's exists.
-                modalInput.classList.remove("is-valid");
-                // Then add .is-invalid.
-                modalInput.classList.add("is-invalid");    
-            }            
-
-            modalOutput.textContent = result || "Output";
-        }
-        else if (conversionType === "cidr-sm") {
-            const CIDR = parseInt(modalInput.value);
-            const result = Subnet.subnetMask(CIDR);
-
-            if (!result) {
-                // Remove first the .is-valid if it's exists.
-                modalInput.classList.remove("is-valid");
-                // Then add .is-invalid.
-                modalInput.classList.add("is-invalid");    
-            }
-
-            modalOutput.textContent = result || "Output";
-
-        } else if (conversionType === "sm-cidr") {
-            const SubnetMask = modalInput.value;
-            const result = Subnet.CIDR(SubnetMask);
-
-            if (result !== 0 && !result) {
-                // Remove first the .is-valid if it's exists.
-                modalInput.classList.remove("is-valid");
-                // Then add .is-invalid.
-                modalInput.classList.add("is-invalid");    
-            }
-
-            if (result === 0) {
-                modalOutput.textContent = result;
-            } else {
-                modalOutput.textContent = result || "Output";
-            }            
-        }
-        else if (conversionType === "dec-bin") {
-            const decimal = parseInt(modalInput.value);
-            const result = Subnet.decToBin(decimal);
-
-            if (!result) {
-                // Remove first the .is-valid if it's exists.
-                modalInput.classList.remove("is-valid");
-                // Then add .is-invalid.
-                modalInput.classList.add("is-invalid");    
-            }
-
-            modalOutput.textContent = result || "Output";
-
-        } else {
-            const bin = modalInput.value;
-            const result = Subnet.binToDec(bin); 
-
-            if (result instanceof Error) {
-                // Remove first the .is-valid if it's exists.
-                modalInput.classList.remove("is-valid");
-                // Then add .is-invalid.
-                modalInput.classList.add("is-invalid");
-
-                modalOutput.textContent = "Output";
-                return;
-            }
-
-            modalOutput.textContent = result;
-        }
-        
-    } catch (error) {
-        console.log(error);
+    // Update the anchor link.
+    if (showAnchorLink === true) {
+        modalRefAnchor.classList.remove("invisible");
+        modalRefAnchor.classList.add("visible");
+    } else {
+        modalRefAnchor.classList.remove("visible");
+        modalRefAnchor.classList.add("invisible");
     }
 }
 
-const validationModal = function (modal, inputLabel, outputLabel, validationOperation) {
+const modalOperation = (modalOperation) => {
     /**
-     * This function takes arguments of type string.
-     * This function is used in validation modal.
-     * Returns null.
+     * This function will perform modal's operation.
+     * Returns void.
      */
+    
+    switch (modalOperation) {
+        case "ipv4-bin": {
+            const ipv4Address = modalInput.value.trim();
+            const result = Subnet.bin(ipv4Address)
 
-    try {
+            if (result instanceof Error) {
+                // Display validation text.
+                modalInput.classList.remove("is-valid");
+                modalInput.classList.add("is-invalid");                
 
-        for (const argument of arguments) {            
-            if (argument === undefined || argument === "" || argument === null) throw new Error("Arguments cannot be empty!");
-            if (typeof argument !== "string") throw new Error("Arguments must be a string!");
+                // Display alert message.
+                renderAlertMessage(result, modalBody);
+
+                // Update the output text.
+                modalOutput.innerText = "Output";
+                modalOutput.classList.remove("border-success", "is-valid");
+                break;
+            }
+
+            // Otherwise valid.
+            // Update the output text and validation text.
+            modalOutput.innerText = result;            
+            modalOutput.classList.add("border", "border-success", "is-valid");
+            break;
         }
+        case "bin-ipv4": {
+            const ipv4Binaries = modalInput.value.trim();
+            const result = Subnet.dec(ipv4Binaries);
 
-        // Update the modal's content.
-        modalTitle.textContent = modal;
-        modalInputLabel.textContent = inputLabel;
-        modalOutputLabel.textContent = outputLabel;
+            if (result instanceof Error) {
+                // Display validation text.
+                modalInput.classList.remove("is-valid");
+                modalInput.classList.add("is-invalid");                
 
-        // Reset input and output display text.
-        modalInput.value = "";
-        modalOutput.textContent = "Output";
+                // Display alert message.
+                renderAlertMessage(result, modalBody);
 
-        // Update input's type
-        modalInput.setAttribute("type", "text");
+                // Update the output text.
+                modalOutput.innerText = "Output";
+                modalOutput.classList.remove("border-success", "is-valid");
+                break;
+            }
 
-        // Make sure that the validation text won't show up when the modal is open with an empty input's value.
-        if (modalInput.value === "") modalInput.classList.remove("is-invalid", "is-valid");
-        
-        // Set the type of validation operation.    
-        modalSubmitButton.setAttribute("data-validation-operation", `${validationOperation}`);  
+            // Otherwise valid.
+            // Update the output text and validation text.
+            modalOutput.innerText = result;            
+            modalOutput.classList.add("border", "border-success", "is-valid");            
+            break;
+        }
+        case "cidr-sm": {
+            const cidr = parseInt(modalInput.value.trim());
+            const result = Subnet.subnetMask(cidr);
 
-    } catch (error) {
-        console.log(error);
-    }         
-}
+            if (result instanceof Error) {
+                // Display validation text.
+                modalInput.classList.remove("is-valid");
+                modalInput.classList.add("is-invalid");                
 
-const validationOperation = () => {
-    /**
-     * This function will perform the validation operation.
-     * Returns null
-     */
+                // Display alert message.
+                renderAlertMessage(result, modalBody);
 
-    try {
-        // Extract info from data-validation-operation attribute.
-        const operationType = modalSubmitButton.getAttribute("data-validation-operation");
+                // Update the output text.
+                modalOutput.innerText = "Output";
+                modalOutput.classList.remove("border-success", "is-valid");
 
-        if (operationType === "ipv4") {
-            const ipv4 = modalInput.value;
-            const result = Subnet.checkFormat(ipv4);
+                break;
+            }
+
+            // Otherwise valid.
+            // Update the output text and validation text.
+            modalOutput.innerText = result;            
+            modalOutput.classList.add("border", "border-success", "is-valid");
+            break;
+        }
+        case "sm-cidr": {
+            const subnetMask = modalInput.value.trim();
+            const result = Subnet.CIDR(subnetMask);
+
+            if (result instanceof Error) {
+                // Display validation text.
+                modalInput.classList.remove("is-valid");
+                modalInput.classList.add("is-invalid");                
+
+                // Display alert message.
+                renderAlertMessage(result, modalBody);
+
+                // Update the output text.
+                modalOutput.innerText = "Output";
+                modalOutput.classList.remove("border-success", "is-valid");
+                break;
+            }
+
+            // Otherwise valid.
+            // Update the output text and validation text.
+            modalOutput.innerText = result;            
+            modalOutput.classList.add("border", "border-success", "is-valid");            
+            break;
+        }
+        case "dec-bin": {
+            const dec = parseInt(modalInput.value.trim());
+            const result = Subnet.decToBin(dec);
+
+            if (result instanceof Error) {
+                // Display validation text.
+                modalInput.classList.remove("is-valid");
+                modalInput.classList.add("is-invalid");
+
+                // Display alert message.
+                renderAlertMessage(result, modalBody);
+
+                // Update the output text.
+                modalOutput.innerText = "Output";
+                modalOutput.classList.remove("border-success", "is-valid");
+                break;
+            }
+
+            // Otherwise valid.
+            // Update the output text and validation text.
+            modalOutput.innerText = result;            
+            modalOutput.classList.add("border", "border-success", "is-valid");         
+            break;
+        }
+        case "bin-dec": {
+            const bin = modalInput.value.trim();
+            const result = Subnet.binToDec(bin);
+            
+            if (result instanceof Error) {
+                // Display validation text.
+                modalInput.classList.remove("is-valid");
+                modalInput.classList.add("is-invalid");
+
+                // Display alert message.
+                renderAlertMessage(result, modalBody);
+
+                // Update the output text.
+                modalOutput.innerText = "Output";
+                modalOutput.classList.remove("border-success", "is-valid");
+                break;
+            }
+
+            // Otherwise valid.
+            // Update the output text and validation text.
+            modalOutput.innerText = result;            
+            modalOutput.classList.add("border", "border-success", "is-valid");
+            break;
+        }
+        // Validations.
+        case "ipv4-format": {
+            const ipv4Address = modalInput.value.trim();
+            const result = Subnet.checkFormat(ipv4Address);
 
             if (result === false) {
-                // Remove first the .is-valid if it's exists.
+                // Display validation text.
                 modalInput.classList.remove("is-valid");
-                
-                // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
-                
-                modalOutput.textContent = "Invalid Format";
-                
-                return;
-            }            
 
-            modalOutput.textContent = "Valid Format";
+                // Display alert message.                
+                renderAlertMessage(new Error("Invalid IPv4 Address!"), modalBody);
+
+                // Update the output text.
+                modalOutput.innerText = "Output";
+                modalOutput.classList.remove("border-success", "is-valid");
+                break;
+            }
+
+            // Otherwise valid.
+            // Update the output text and validation text.
+            modalOutput.innerText = "Valid IPv4 Address";
+            modalOutput.classList.add("border", "border-success", "is-valid");                       
+            break;
         }
-        else if (operationType === "sm") {
-            const subnetMask = modalInput.value;
+        // Validations.
+        case "sm-format": {
+            const subnetMask = modalInput.value.trim();
             const result = Subnet.checkSM(subnetMask);
 
             if (result === false) {
-                // Remove first the .is-valid if it's exists.
+                // Display validation text.
                 modalInput.classList.remove("is-valid");
-                
-                // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
-                
-                modalOutput.textContent = "Invalid format";
-                
-                return;
-            }            
 
-            modalOutput.textContent = "Valid format";
+                // Display alert message.
+                renderAlertMessage(new Error("Invalid Subnet Mask!"), modalBody);
+
+                // Update the output text.
+                modalOutput.innerText = "Output";
+                modalOutput.classList.remove("border-success", "is-valid");
+                break;
+            }
+
+            // Otherwise valid.
+            // Update the output text and validation text.
+            modalOutput.innerText = "Valid Subnet Mask";
+            modalOutput.classList.add("border", "border-success", "is-valid");            
+            break;
         }
-        else {
-            // If operation is IPv4 Address type.
-            const ipv4 = modalInput.value;
-            const result = Subnet.ipv4Type(ipv4);
-
-            if (result instanceof Error)  {
-                // Remove first the .is-valid if it's exists.
+        case "ipv4-type": {
+            const ipv4Address = modalInput.value.trim();
+            const result = Subnet.ipv4Type(ipv4Address);
+            console.log(result)
+            if (result instanceof Error) {
+                // Display validation text.
                 modalInput.classList.remove("is-valid");
-                
-                // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
-                
-                modalOutput.textContent = "Unknown Address";
 
-                return;                
-            }            
+                // Display alert message.
+                renderAlertMessage(result, modalBody);
 
-            modalOutput.textContent = result;
+                // Update the output text.
+                modalOutput.innerText = "Output";
+                modalOutput.classList.remove("border-success", "is-valid");
+                break;
+            }
+
+            // Otherwise valid.
+            // Update the output text and validation text.
+            modalOutput.innerText = result;            
+            modalOutput.classList.add("border", "border-success", "is-valid");
+            break;
         }
-        
-    } catch (error) {
-        console.log(error);
     }
 }
 
@@ -560,7 +593,7 @@ Array.from(forms).forEach(form => {
 })
 
 
-const formInputs = document.querySelectorAll("input[class='form-control bg-transparent']");
+const formInputs = document.querySelectorAll(".form-control");
 Array.from(formInputs).forEach(input => {    
 
     // Add event handlers to each form input.
@@ -599,7 +632,7 @@ subnetNumberInput.addEventListener("focus", () => {
 
 
 subnetNumberInput.addEventListener("change", () => {
-
+    // Find the subnet.
     const subnetToFind = parseInt(subnetNumberInput.value);
 
     getSubnet(subnetToFind);
@@ -613,79 +646,44 @@ modalElement.addEventListener('show.bs.modal', event => {
 
     // Extract info from data-* attributes.
     const modal = link.getAttribute('data-modal');
+    const subtitle = link.innerHTML.trim()
     const input = link.getAttribute('data-input') || "Input";
     const output = link.getAttribute('data-output') || "Output";
+    const modalOperation = link.getAttribute('data-modal-operation');
     
-    // Check what modal to use for.    
-    if (modal === "Conversion") {
-        // Extract the conversion type.
-        const conversionType = link.getAttribute('data-conversion');
-        
-        // Show the switch button.
-        modalSwitchButton.classList.remove("visually-hidden");
+    // Determine whether to show the anchor link.
+    const showAnchorLink = modalOperation === "ipv4-type" ? true : false;
+    
+    // Update modal's content.
+    updateModalContent(modal, subtitle, input, output, modalOperation, showAnchorLink);
 
-        // Hide the reference link for address type.
-        modalRefAnchor.classList.add("visually-hidden");
-        
-        // Update Modal.
-        conversionModal(modal, conversionType, input, output);
-        
-        // For the switch button, reverse the data attributes.
-        modalSwitchButton.setAttribute("data-modal", `${modal}`)
-        const conversionTypeArray = conversionType.split("-")
-        modalSwitchButton.setAttribute("data-conversion", `${conversionTypeArray[1]}-${conversionTypeArray[0]}`);
-        modalSwitchButton.setAttribute("data-input", `${output}`);
-        modalSwitchButton.setAttribute("data-output", `${input}`);
-        
-        // Set the operation to perform for the submit's button.
-        modalSubmitButton.setAttribute("data-modal", "conversion");
-    }
-    else {
-        // If modal is for validation.
-
-        // Extract the validation operation.
-        const validationOperation = link.getAttribute("data-validation-operation");
-
-        // Hide the switch button.
-        modalSwitchButton.classList.add("visually-hidden");
-
-        // Show the reference link for address type.
-        if (validationOperation === "ipv4-type") {
-            modalRefAnchor.classList.remove("visually-hidden");    
-        } else {
-            modalRefAnchor.classList.add("visually-hidden");
-        }
-        
-
-        // Make sure the alert message does not show up when not closed in validation modal.
-        const firstChild = modalBody.firstElementChild;
-        if (firstChild instanceof HTMLDivElement) {
-            modalBody.removeChild(modalBody.firstElementChild);
-        } 
-
-        // Update Modal.
-        validationModal(modal, input, output, validationOperation);
-
-        // Set the operation to perform for the submit's button.
-        modalSubmitButton.setAttribute("data-modal", "validation");
-    }
-        
+    // Tell the modal submit button what operation to perform.
+    modalSubmitButton.setAttribute("data-modal-operation", `${modalOperation}`);
+    
+    // Set data attributes for the modal switch button.
+    const conversionTypeArray = modalOperation.split("-");
+    modalSwitchButton.setAttribute("data-modal-subtitle", subtitle);
+    modalSwitchButton.setAttribute("data-modal-operation", `${conversionTypeArray[1]}-${conversionTypeArray[0]}`);
+    modalSwitchButton.setAttribute("data-input", `${output}`);
+    modalSwitchButton.setAttribute("data-output", `${input}`);
 })
 
 
 modalSwitchButton.addEventListener("click", () => {
-
-    // Extract info from data-* attributes.
-    const modal = modalSwitchButton.getAttribute("data-modal")
-    const conversionType = modalSwitchButton.getAttribute("data-conversion");
+    // Extract info from data-* attributes.    
+    const conversionType = modalSwitchButton.getAttribute("data-modal-operation");
+    const subtitle = modalSwitchButton.getAttribute("data-modal-subtitle");
     const input = modalSwitchButton.getAttribute('data-input');
     const output = modalSwitchButton.getAttribute('data-output');
 
-    conversionModal(modal, conversionType, input, output);
+    updateModalContent("Conversion", subtitle, input, output, conversionType, false);
+
+    // Tell the modal submit button what operation to perform.
+    modalSubmitButton.setAttribute("data-modal-operation", `${conversionType}`);
 
     // Reverse the data attributes to perform the opposite converison.
     const conversionTypeArray = conversionType.split("-")
-    modalSwitchButton.setAttribute("data-conversion", `${conversionTypeArray[1]}-${conversionTypeArray[0]}`);
+    modalSwitchButton.setAttribute("data-modal-operation", `${conversionTypeArray[1]}-${conversionTypeArray[0]}`);
     modalSwitchButton.setAttribute("data-input", `${output}`);
     modalSwitchButton.setAttribute("data-output", `${input}`);
 })
@@ -695,13 +693,8 @@ modalSwitchButton.addEventListener("click", () => {
 modalSubmitButton.addEventListener("click", () => {
 
     // Check what operation to perform.
-    const operation = modalSubmitButton.getAttribute("data-modal");
+    const operation = modalSubmitButton.getAttribute("data-modal-operation");
 
-    if (operation === "conversion") {
-        conversionOperation();
-    }
-    else {
-        // If operation is validation.
-        validationOperation();
-    }    
+    // Perform the modal operation.
+    modalOperation(operation)  ;
 })

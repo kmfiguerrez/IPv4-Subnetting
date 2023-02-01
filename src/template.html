@@ -5,15 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">    
     <link rel="stylesheet" href="./style.css">
-    <!-- <link rel="stylesheet" href="./css/style.css"> -->
+    <!-- <link rel="stylesheet" href="./src/css/style.css"> -->
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@200;400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">    
     <title>IPv4 Subnetting</title>
 </head>
-<body>
+<body style="background-color: rgba(228, 228, 228, 0.548);">
+    
     <div class="container-fluid px-0" style="font-family: 'Alexandria', sans-serif;">
         <!-- Nav section -->
-        <nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-3 mb-md-5">
+        <nav class="navbar navbar-expand-sm navbar-light mb-3 mb-md-5">
             <div class="container">
                 <a class="navbar-brand" href="#">IPV4 SUBNETTING</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,13 +30,13 @@
         </nav>
         
         <!-- Form Section -->
-        <main class="container min-vh-100 bg-secondary" style="background-color: #262626;">
+        <main class="container min-vh-100">
             <h1 class="text-center visually-hidden">IPV4 SUBNETTING</h1>
             <form class=" mb-3 mb-5">
                 <div class="row gy-3">                    
                     <div class="col-md">
                         <label for="ipv4" class="form-label">IPv4 Address</label>
-                        <input type="text" class="form-control" id="ipv4" placeholder="Enter IP Address">
+                        <input type="text" class="form-control bg-transparent" id="ipv4" placeholder="Enter an IPv4 Address">
                         <div class="valid-feedback">
                             Looks Good!
                         </div> 
@@ -45,7 +46,7 @@
                     </div>
                     <div class="col-md">
                         <label for="subnet-mask" class="form-label">Subnet Mask</label>
-                        <input type="text" class="form-control" id="subnet-mask" placeholder="Enter Subnet Mask">
+                        <input type="text" class="form-control bg-transparent" id="subnet-mask" placeholder="Enter a Subnet Mask">
                         <div class="valid-feedback">
                             Looks Good!
                         </div> 
@@ -55,7 +56,7 @@
                     </div>
                     <div class="col-md">
                         <label for="subnet-bits" class="form-label">Subnet Bit(s)</label>
-                        <input type="number" class="form-control" id="subnet-bits" placeholder="Enter Subnet Bit(s)" min="0" max="29">
+                        <input type="number" class="form-control bg-transparent" id="subnet-bits" placeholder="Enter Subnet Bit(s)" min="0" max="29">
                         <div class="valid-feedback">
                             Looks Good!
                         </div> 
@@ -78,33 +79,33 @@
                 <div class="row mb-2 border-bottom mx-0">
                     <div class="col-md-8 ps-0">
                         <form>
-                            <label for="subnet-number" class="fw-bold">Subnet:</label>
-                            <input id="subnet-number" type="number" class="border-0" min="0" value="0"/>
+                            <label for="subnet-number" class="fw-bold" data-bs-toggle="tooltip" data-bs-placement="top" title="Current Subnet">Subnet:</label>
+                            <input id="subnet-number" type="number" class="border-0 bg-transparent" min="0" />
                         </form>                        
                     </div>
                     <div class="col-md-4 ps-0 ps-md-3">
-                        <span class="fw-bold">Hosts:</span> <span id="host">0</span>
+                        <span class="fw-bold" data-bs-toggle="tooltip" data-bs-placement="top" title="Hosts per subnet">Hosts:</span> <span id="host"></span>
                     </div>                    
                 </div>
                 <div class="row mb-2">
-                    <div class="col-6 col-md-4 fw-bold">Network Address</div>
-                    <div class="col-4" id="network-address">0.0.0.0</div>
-                    <div class="col-2 col-md-4 text-center text-md-start">/0</div>
+                    <div class="col-6 col-md-4 fw-bold">Network Address:</div>
+                    <div class="col-4" id="network-address">X.X.X.X</div>
+                    <div class="col-2 col-md-4 text-center text-md-start">/X</div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-6 col-md-4 fw-bold">First Usable Address</div>
-                    <div class="col-4" id="first-usable-address">0.0.0.0</div>
-                    <div class="col-2 col-md-4 text-center text-md-start">/0</div>
+                    <div class="col-6 col-md-4 fw-bold">First Usable Address:</div>
+                    <div class="col-4" id="first-usable-address">X.X.X.X</div>
+                    <div class="col-2 col-md-4 text-center text-md-start">/X</div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-6 col-md-4 fw-bold">Last Usable Address</div>
-                    <div class="col-4" id="last-usable-address">0.0.0.0</div>
-                    <div class="col-2 col-md-4 text-center text-md-start">/0</div>
+                    <div class="col-6 col-md-4 fw-bold">Last Usable Address:</div>
+                    <div class="col-4" id="last-usable-address">X.X.X.X</div>
+                    <div class="col-2 col-md-4 text-center text-md-start">/X</div>
                 </div>
                 <div class="row">
-                    <div class="col-6 col-md-4 fw-bold">Broadcast Address</div>
-                    <div class="col-4" id="broadcast-address">0.0.0.0</div>
-                    <div class="col-2 col-md-4 text-center text-md-start">/0</div>
+                    <div class="col-6 col-md-4 fw-bold">Broadcast Address:</div>
+                    <div class="col-4" id="broadcast-address">X.X.X.X</div>
+                    <div class="col-2 col-md-4 text-center text-md-start">/X</div>
                 </div>
             </div>
         </main>
@@ -117,8 +118,8 @@
                     <div class="col-12">
                         <h3>What this app is about?</h3>
                         <p>
-                            This app can be used to check your work whenever your're learning or practicing IPv4 subnetting. 
-                            This app is free for anyone to use.
+                            This app can be used to check your work whenever your're learning or practicing IPv4 subnetting.
+                            This is also useful if you're going for the CCNA exam or any other equivalent certifications.                            
                         </p>
                     </div>
                     <div class="col-12">
@@ -133,24 +134,65 @@
                     <div class="col-12">
                         <h3>About the output?</h3>
                         <ul>
-                            <li>By default the app will display the first subnet (Subnet zero).</li>
+                            <li>By default the app will display the <strong>first subnet (Subnet zero)</strong>.</li>
                             <li>You can find other subnets if available by clicking on the subnet label or the subnet number input next to it.</li>
-                            <li>The Hosts label represents the number of host per subnet.</li>
+                            <li>The <strong>Subnet label</strong> represents the current subnet.</li>
+                            <li>The <strong>Hosts label</strong> represents the number of host per subnet.</li>
                         </ul>
                     </div>
                     <div class="col-12">
                         <h3>Features</h3>
-                        <p>Conversions</p>
+                        <p><strong>Conversions</strong></p>
                         <ul>
-                            <li>IPv4 to Binary</li>
-                            <li>CIDR to Subnet Mask</li>
-                            <li>Decimal to Binary</li>
+                            <li>
+                                IPv4 to Binary <br>
+                                <small>
+                                    This option will convert each octet into binary  and vice versa which is useful for ipv4 subnetting.
+                                </small>                                                           
+                            </li>
+                            <br>
+                            <li>
+                                CIDR to Subnet Mask <br>
+                                <small>
+                                    This option will convert CIDR into Subnet Mask and vice versa.
+                                </small>
+                            </li>
+                            <br>
+                            <li>
+                                Decimal to Binary <br>
+                                <small>
+                                    This option will covert decimals into binaries and vice versa.
+                                </small>
+                            </li>
                         </ul>
-                        <p>Format checking</p>
+                        <p><strong>Validations</strong></p>
                         <ul>
-                            <li>IPv4 Address</li>
-                            <li>Subnet Mask</li>
-                            <li>IPv4 Address Type</li>                            
+                            <li>
+                                IPv4 Address Format<br>
+                                <small>
+                                    This option will check if the input address is a valid ipv4 address.
+                                </small>
+                            </li>
+                            <br>
+                            <li>
+                                Subnet Mask Format<br>
+                                <small>
+                                    This option will check if the input mask is a valid subnet mask.
+                                </small>
+                            </li>
+                            <br>
+                            <li>
+                                IPv4 Address Type <br>
+                                <small>
+                                    This option will determine if the input address is one of these type of addresses.
+                                    <ul>
+                                        <li>Private Address</li>
+                                        <li>Public Address</li>
+                                        <li>Multicast Address</li>
+                                        <li>Broadcast Address</li>
+                                    </ul>
+                                </small>
+                            </li>
                         </ul>
                     </div>
                 </div>                                
@@ -169,7 +211,7 @@
                                 </div>
                             </div>
                         </nav>
-                        <p class="small text-center ">&copy IPv4 Subnetting 2022 | All Rights Reserved.</p>
+                        <p class="small text-center ">&copy IPv4 Subnetting 2023 | All Rights Reserved.</p>
                     </div>
                 </div>
                 
@@ -178,11 +220,11 @@
 
         <!-- Offcanvas -->
         <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel" style="width: 250px;">
-            <div class="offcanvas-header border-bottom">
+            <div class="offcanvas-header bg-dark text-white">
                 <h5 class="offcanvas-title" id="offcanvasLabel">Features</h5>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-            <div class="offcanvas-body">
+            <div class="offcanvas-body text-white" style="background-color: #151a1e;">
                 <ul class="list-unstyled ps-0">
                     <!-- Conversions -->
                     <li class="mb-1">
@@ -193,20 +235,20 @@
                         <div class="collapse" id="conversion-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                 <li>
-                                    <a href="#offcanvasModal" class="link-dark rounded" data-bs-toggle="modal" data-modal="Conversion"
-                                        data-conversion="ipv4-bin" data-input="IPv4 Address" data-output="Binary">
+                                    <a href="#offcanvasModal" class="link-dark rounded text-light" data-bs-toggle="modal" data-modal="Conversion"
+                                        data-modal-operation="ipv4-bin" data-input="IPv4 Address" data-output="Binary">
                                         IPv4<i class="bi bi-arrow-left-right mx-2"></i>Bin
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#offcanvasModal" class="link-dark rounded" data-bs-toggle="modal" data-modal="Conversion"
-                                        data-conversion="cidr-sm" data-input="CIDR" data-output="Subnet Mask">
+                                    <a href="#offcanvasModal" class="link-dark rounded text-light" data-bs-toggle="modal" data-modal="Conversion"
+                                        data-modal-operation="cidr-sm" data-input="CIDR" data-output="Subnet Mask">
                                         CIDR<i class="bi bi-arrow-left-right mx-2"></i>SM
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#offcanvasModal" class="link-dark rounded" data-bs-toggle="modal" data-modal="Conversion"
-                                        data-conversion="dec-bin" data-input="Decimal" data-output="Binary">
+                                    <a href="#offcanvasModal" class="link-dark rounded text-light" data-bs-toggle="modal" data-modal="Conversion"
+                                        data-modal-operation="dec-bin" data-input="Decimal" data-output="Binary">
                                         Dec<i class="bi bi-arrow-left-right mx-2"></i>Bin
                                     </a>
                                 </li>
@@ -217,24 +259,24 @@
                     <li class="mb-1">
                         <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
                             data-bs-target="#checker-collapse" aria-expanded="false">
-                            Validation
+                            Validations
                         </button>
                         <div class="collapse" id="checker-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                 <li>
-                                    <a href="#offcanvasModal" class="link-dark rounded" data-bs-toggle="modal" data-modal="Validation" data-validation-operation="ipv4" 
+                                    <a href="#offcanvasModal" class="link-dark rounded text-light" data-bs-toggle="modal" data-modal="Validation" data-modal-operation="ipv4-format" 
                                         data-input="IPv4 Address">
-                                        IPv4 Address
+                                        IPv4 Address Format
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#offcanvasModal" class="link-dark rounded" data-bs-toggle="modal" data-modal="Validation" data-validation-operation="sm"
+                                    <a href="#offcanvasModal" class="link-dark rounded text-light" data-bs-toggle="modal" data-modal="Validation" data-modal-operation="sm-format"
                                         data-input="Subnet Mask">
-                                        Subnet Mask
+                                        Subnet Mask Format
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#offcanvasModal" class="link-dark rounded" data-bs-toggle="modal" data-modal="Validation" data-validation-operation="ipv4-type"
+                                    <a href="#offcanvasModal" class="link-dark rounded text-light" data-bs-toggle="modal" data-modal="Validation" data-modal-operation="ipv4-type"
                                         data-input="IPv4 Address" data-output="Type">
                                         IPv4 Address Type
                                     </a>
@@ -250,8 +292,11 @@
         <div class="modal fade" id="offcanvasModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header py-1">
+                        <div>
                         <h5 class="modal-title" id="modalLabel">Title</h5>
+                            <small id="modalSubtitle" class="text-muted">Subtitle</small>
+                        </div>                                                
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" data-modal-alert="true">
@@ -266,7 +311,6 @@
                                     Invalid entry!
                                 </div> 
                             </div>
-                            <!-- <p class="text-muted">To</p> -->
                             <a id="switch-button" class="btn btn-light" role="button">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
@@ -275,6 +319,9 @@
                             <div class="mb-3">
                                 <label  id="modal-output-label" for="modal-output" class="col-form-label">Output:</label>
                                 <output id="modal-output" class="d-block border border-1 py-2 px-3 rounded-2 text-muted text-break user-select-all">Output</output>
+                                <div class="valid-feedback">
+                                    Success!
+                                </div> 
                             </div>                            
                         </form>
                     </div>
@@ -290,9 +337,10 @@
     </div>
 
    <!-- Scripts -->
+   
    <script src="./bootstrap.bundle.min.js"></script>
     <!-- <script src="../public/bootstrap.bundle.min.js"></script> -->
-    <!-- <script src="./js/main.js" type="module"></script> -->
+    <!-- <script src="./src/js/main.js" type="module"></script>  -->
 
 </body>
 </html>
